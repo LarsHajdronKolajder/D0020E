@@ -12,6 +12,4 @@ Daniel Hammar
 Martin Höglund
 
 ## Git-Workflow
-![image](https://github.com/LarsHajdronKolajder/D0020E/assets/98786177/ade0a847-618a-4402-8468-3e3c9c815d15)
-![image](https://github.com/LarsHajdronKolajder/D0020E/assets/98786177/13fff052-a0b3-4d7d-b103-1d3cd9fdedc6)
 

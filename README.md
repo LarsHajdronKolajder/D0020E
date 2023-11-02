@@ -13,3 +13,7 @@ Martin Höglund
 
 ## Git-Workflow
 
+## Code Format
+We are programming in X, therefore we agreed on a standard code format:  
+- Example 1
+- Example 2

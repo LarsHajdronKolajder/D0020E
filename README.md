@@ -6,9 +6,9 @@ This is part of a [project course](https://www.ltu.se/edu/course/D00/D0020E/D002
 The project revolves around...
 
 ## Group members
-Ludvig Järvi
-Anton Follinger
-Daniel Hammar
+Ludvig Järvi  
+Anton Follinger  
+Daniel Hammar  
 Martin Höglund
 
 ## Git-Workflow

@@ -1,0 +1,24 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="container">
+    <% if (page.total == 0) { %>
+        <p>No notifications</p>
+    <% } else { %>
+        <form class="p-2" method="POST" action="<%= baseUrl %>/notifications/seen?redirect=<%= originalUrl %>">
+            <button type="submit" class="btn btn-primary">Mark all as read</button>
+        </form>
+    <% } %>
+    <% for (const notification of page.data) { %>
+        <div class="m-2 p-3 border position-relative <%= notification.seen ? "" : "bg-light" %>">
+            <div class="text-primary"><%= notification.category %> <small class="text-muted mx-2"><%= formatDistanceToNow(notification.createdAt) %> ago</small></div>
+            <small>
+            <%= notification.message %>
+            </small>
+            <br />
+            <small><a href="<%= baseUrl %>/notifications/<%= notification._id %>" class="stretched-link">View</a></small>
+        </div>
+    <% } %>
+
+  <!-- prettier-ignore -->
+  <%- include('../partials/pagination', { page, path: "/auctions" }) %>
+</div>

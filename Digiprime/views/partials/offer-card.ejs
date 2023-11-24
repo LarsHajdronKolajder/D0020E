@@ -1,0 +1,35 @@
+<div class="col" id="eachBlock" style="display: block">
+  <div class="card mb-3" id="offerCards">
+    <div class="position-relative">
+      <span class="position-absolute badge bg-primary m-2" id="itemCostumer"
+        ><%= offer.costumer %></span
+      >
+      <a href="<%= baseUrl %>/offers/<%= offer._id %>">
+        <% if (offer.images.length) {%>
+        <img class="img-fluid" alt="" src="<%=offer.images[0].url%> " />
+        <% } else { %>
+        <img
+          class="img-fluid"
+          alt=""
+          src="https://res.cloudinary.com/diq0t2bqj/image/upload/v1622925764/YelpCamp/kjhxxshjrdudgkoehoyl.jpg"
+        />
+        <% } %>
+      </a>
+    </div>
+
+    <h4 class="py-2 px-3 m-0"><%= offer.title %></h4>
+
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">
+        <small class="text-muted"
+          ><a href="<%= baseUrl %>/profile/<%= offer.author.username %>"
+            ><%= offer.author.username %></a
+          ></small
+        >
+      </li>
+      <li class="list-group-item">
+        <small class="text-muted"><%= offer.location %></small>
+      </li>
+    </ul>
+  </div>
+</div>

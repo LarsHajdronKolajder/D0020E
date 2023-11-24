@@ -1,0 +1,110 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="container">
+  <div class="my-3 d-flex justify-content-between">
+    <h2><%= message.title %></h2>
+
+    <% if (message.to._id == currentUser._id) { %>
+    <button
+      type="button"
+      class="card-link btn btn-primary"
+      data-bs-toggle="modal"
+      data-bs-target="#replyModal"
+      style="height: 2.4rem; margin: 0.8rem 0 0 0"
+    >
+      Reply
+    </button>
+    <% } %>
+  </div>
+
+  <div class="row border px-1 py-2">
+    <div class="d-flex justify-content-between">
+      <strong><%= message.from.username %></strong>
+      <span class="text-muted"><%= displayDate(message.createdAt) %></span>
+    </div>
+    <div class="my-2">
+      <p class=""><%= message.body %></p>
+    </div>
+  </div>
+
+
+  <% if (message.replyingTo) { %>
+    <h6 class="mt-5 text-muted">Previous message</h6>
+    <div class="row border px-1 py-2">
+      <% if (message.title != message.replyingTo.title) { %>
+        <strong><%= message.replyingTo.title %></strong>
+      <% } %>
+      <div class="d-flex justify-content-between">
+        <strong><%= message.replyingTo.from.username %></strong>
+        <span class="text-muted"><%= displayDate(message.createdAt) %></span>
+      </div>
+      <div class="my-2">
+        <p class=""><%= message.replyingTo.body %></p>
+      </div>
+    </div>
+  <% } %>
+</div>
+
+<div
+  class="modal fade"
+  id="replyModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
+    <form class="" method="POST" action="<%= baseUrl %>/messages/<%= message._id %>">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">
+            Send message to <strong><%= message.to.username %></strong>
+          </h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <div class="form-floating mb-3">
+            <input
+              type="text"
+              class="form-control"
+              id="title"
+              name="title"
+              placeholder="Title"
+              value="<%= message.title %>"
+              required
+            />
+            <label for="title">Title</label>
+          </div>
+
+          <div class="form-floating mb-3">
+            <textarea
+              class="form-control"
+              id="body"
+              name="body"
+              placeholder="Message"
+              rows="3"
+              required
+              style="min-height: 100px"
+            ></textarea>
+            <label for="body">Message</label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Close
+          </button>
+          <button type="submit" class="btn btn-primary">Send</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+

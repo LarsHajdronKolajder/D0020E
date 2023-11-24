@@ -1,0 +1,104 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="container mt-3">
+  <h1>Add members</h1>
+
+  <div class="container">
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+      <% for (const offer of offers) { %>
+      <div class="col" id="eachBlock" style="display: block">
+        <div class="card mb-1" id="offerCards">
+          <div class="position-relative">
+            <span
+              class="position-absolute badge bg-primary m-2"
+              id="itemCostumer"
+              ><%= offer.costumer %></span
+            >
+            <a href="<%= baseUrl %>/offers/<%= offer._id %>">
+              <% if (offer.images.length) {%>
+              <img class="img-fluid" alt="" src="<%=offer.images[0].url%> " />
+              <% } else { %>
+              <img
+                class="img-fluid"
+                alt=""
+                src="https://res.cloudinary.com/diq0t2bqj/image/upload/v1622925764/YelpCamp/kjhxxshjrdudgkoehoyl.jpg"
+              />
+              <% } %>
+            </a>
+          </div>
+
+          <div class="accordion accordion-flush" id="accordionTest">
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingOne">
+                <button
+                  class="accordion-button collapsed fs-4 fw-bold"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#acc-<%= offer.id %>"
+                  aria-expanded="false"
+                  aria-controls="acc-<%= offer.id %>"
+                >
+                  <a href="<%= baseUrl %>/offers/<%= offer._id %>">
+                    <span id="searchTitle"><%= offer.title %> </span>
+                  </a>
+                </button>
+              </h2>
+              <div
+                id="acc-<%= offer.id %>"
+                class="accordion-collapse collapse"
+                aria-labelledby="headingOne"
+                data-bs-parent="#accordionTest"
+              >
+                <div class="accordion-body">
+                  <div class="list-group list-group-flush">
+                    <li class="list-group-item" id="itemReferenceSector">
+                      <%= offer.referenceSector %>
+                    </li>
+                    <li class="list-group-item" id="itemReferenceType">
+                      <%= offer.referenceType %>
+                    </li>
+                    <li class="list-group-item">$<%= offer.price %> / Piece</li>
+                    <li class="list-group-item"><%= offer.description %></li>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <small class="text-muted"
+                ><a href="<%= baseUrl %>/profile/<%= offer.author.username %>"
+                  ><%= offer.author.username %></a
+                ></small
+              >
+            </li>
+            <li class="list-group-item">
+              <small class="text-muted"><%= offer.location %></small>
+            </li>
+            <li
+              class="list-group-item d-flex align-items-center justify-content-between"
+            >
+              <form
+                class=""
+                method="POST"
+                action="<%= baseUrl %>/auctions/<%= auction._id %>/invite"
+              >
+                <input
+                  type="hidden"
+                  id="offerId"
+                  name="offerId"
+                  value="<%= offer._id %>"
+                />
+                <button type="submit" class="btn btn-primary">
+                  Add to auction
+                </button>
+              </form>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <% } %>
+    </div>
+  </div>
+</div>

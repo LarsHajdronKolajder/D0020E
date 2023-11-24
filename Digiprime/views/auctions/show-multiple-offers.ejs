@@ -1,0 +1,328 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="container mt-3">
+  <div class="row justify-content-between mb-3">
+    <div class="d-flex gap-2">
+      <h1><%= auction.name %></h1>
+      <span class="badge bg-primary fs-6 my-3">
+        <%= auction.auction_type %>
+      </span>
+      <% if (auction.closed) { %>
+      <span class="badge bg-danger fs-6 my-3">CLOSED</span>
+      <% } %>
+    </div>
+
+    <div class="col-4"></div>
+  </div>
+
+  <div class="row justify-content-between mb-3">
+    <div class="col-6">
+      <ul class="list-group">
+        <li class="list-group-item d-flex justify-content-between">
+          <h6>
+            <a href="<%= baseUrl %>/profile/<%= auction.created_by %>"
+              ><%= auction.created_by %></a
+            >
+          </h6>
+          <span class="text-muted">Created by</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between">
+          <h6><%= auction.reference_sector %></h6>
+          <span class="text-muted">Reference sector</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between">
+          <h6><%= auction.reference_type %></h6>
+          <span class="text-muted">Reference type</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between">
+          <h6>
+            <%= auction.quantity %> <%= auction.quantity > 1 ?
+            `${auction.unit}s` : auction.unit %>
+          </h6>
+          <span class="text-muted">Quantity</span>
+        </li>
+        <% if (auction.highest_bidder) { %>
+        <li class="list-group-item d-flex justify-content-between">
+          <h6>
+            <a href="<%= baseUrl %>/profile/<%= auction.highest_bidder %>">
+              <%= auction.highest_bidder %>
+            </a>
+          </h6>
+          <span class="text-muted">Highest bidder</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between">
+          <h6><%= auction.highest_bid %></h6>
+          <span class="text-muted">Highest bid</span>
+        </li>
+        <% } %>
+      </ul>
+      <% if (isCreator && !auction.closed) { %>
+      <div class="mt-2">
+        <a
+          class="btn btn-primary"
+          href="<%= baseUrl %>/auctions/<%= auction._id %>/invite"
+          >Add members</a
+        >
+      </div>
+      <% } %>
+      <!-- prettier-ignore -->
+      <% if (!isCreator && !auction.closed) {
+        if (currentUser.role == "broker") {
+          if (broker.isRepresenting) {
+      %>
+      <form
+        class="w-100 input-group mt-2"
+        method="POST"
+        action="<%= baseUrl %>/auctions/<%= auction._id %>"
+      >
+        <span class="input-group-text">€</span>
+        <input
+          id="bid"
+          name="bid"
+          required
+          type="text"
+          class="form-control"
+          aria-label="bid"
+          placeholder="0.00"
+        />
+        <button type="submit" class="input-group-text btn-primary">
+          Place bid
+        </button>
+      </form>
+      <div id="bidHelpBlock" class="form-text px-1">
+        Bid will be placed on behalf of <%= broker.isRepresenting.username %>
+      </div>
+
+      <!-- prettier-ignore -->
+      <% }} else { %>
+      <form
+        class="w-100 input-group mt-2"
+        method="POST"
+        action="<%= baseUrl %>/auctions/<%= auction._id %>"
+      >
+        <!-- <input type="hidden" name="_csrf" value="" /> -->
+        <span class="input-group-text">€</span>
+        <input
+          id="bid"
+          name="bid"
+          required
+          type="text"
+          class="form-control"
+          aria-label="bid"
+          placeholder="0.00"
+        />
+        <button type="submit" class="input-group-text btn-primary">
+          Place bid
+        </button>
+      </form>
+      <!-- prettier-ignore -->
+      <% }} %>
+
+      <% if (!broker.isRepresenting && broker.canRepresent.length > 0) { %>
+      <form
+        class="w-100 input-group mt-2"
+        method="POST"
+        action="<%= baseUrl %>/auctions/<%= auction._id %>/represent"
+      >
+        <select
+          id="brokerId"
+          class="form-select"
+          aria-label="select with button addon"
+          name="brokerId"
+          value=""
+          required
+        >
+          <% for (const represent of broker.canRepresent) { %>
+          <option value="<%= represent.agreementId %>">
+            <%= represent.username %>
+          </option>
+          <% } %>
+        </select>
+        <button type="submit" class="input-group-text btn-primary">
+          Represent
+        </button>
+      </form>
+
+      <!-- prettier-ignore -->
+      <% } %>
+    </div>
+    <div class="col-4">
+      <ul class="list-group">
+        <li class="list-group-item d-flex justify-content-between">
+          <h6><%= displayDate(auction.closing_time) %></h6>
+          <span class="text-muted">Closing time</span>
+        </li>
+        <li class="list-group-item">
+          <div class="row justify-content-between">
+            <div class="col-3 text-center">
+              <h6 id="remaining-days" class="mb-2">0</h6>
+              <span class="text-muted">Days</span>
+            </div>
+            <div class="col-3 text-center">
+              <h6 id="remaining-hours" class="mb-2">0</h6>
+              <span class="text-muted">Hours</span>
+            </div>
+            <div class="col-3 text-center">
+              <h6 id="remaining-minutes" class="mb-2">0</h6>
+              <span class="text-muted">Minutes</span>
+            </div>
+            <div class="col-3 text-center">
+              <h6 id="remaining-seconds" class="mb-2">0</h6>
+              <span class="text-muted">Seconds</span>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="mb-3" id="cluster-map"></div>
+
+  <div class="row row-cols-md-5 g-1 mb-3">
+    <!-- prettier-ignore -->
+    <%
+      for (const member of members) {
+        if (member.is_room_admin) continue;
+
+        const pillStyle = member.offer.costumer === "Supply" ? "bg-primary" : "bg-secondary";
+    %>
+
+    <div class="col" id="" style="display: block">
+      <div class="card mb-1" id="offerCards">
+        <div class="position-relative">
+          <div class="position-absolute px-2 py-1">
+            <span class="badge bg-primary" id="itemCostumer">
+              <%= member.offer.costumer %>
+            </span>
+            <% if (auction.highest_bidder == member.username) { %>
+            <span class="badge bg-danger" id="itemCostumer"> Best bid </span>
+            <% } %>
+          </div>
+
+          <a href="<%= baseUrl %>/offers/<%= member.offer._id %>">
+            <% if (member.offer.images.length) {%>
+            <img
+              class="img-fluid"
+              alt=""
+              src="<%= member.offer.images[0].url%> "
+            />
+            <% } else { %>
+            <img
+              class="img-fluid"
+              alt=""
+              src="https://res.cloudinary.com/diq0t2bqj/image/upload/v1622925764/YelpCamp/kjhxxshjrdudgkoehoyl.jpg"
+            />
+            <% } %>
+          </a>
+        </div>
+
+        <!-- <div class="py-2 px-3">
+          <div class="d-flex justify-content-between">
+            <div class="d-flex align-items-center gap-2">
+              <a href="<%= baseUrl %>/offers/<%= member.offer._id %>">
+                <h4 id="searchTitle"><%= member.offer.title %></h4>
+              </a>
+            </div>
+          </div>
+        </div> -->
+
+        <ul class="list-group list-group-flush text-muted">
+          <li class="list-group-item d-flex justify-content-between">
+            <h6>
+              <a href="<%= baseUrl %>/profile/<%= member.username %>">
+                <%= member.username %>
+              </a>
+            </h6>
+          </li>
+          <li class="list-group-item d-flex justify-content-between">
+            <small class="text-muted"><%= member.offer.location %></small>
+          </li>
+          <% if (member.bid !== undefined) { %>
+          <li class="list-group-item d-flex flex-column">
+            <small>Bid: <%= member.bid.text %></small>
+            <small class="text-muted">
+              <%= formatDistanceToNow(new Date(member.bid.created_at)) %> ago
+            </small>
+          </li>
+          <li class="list-group-item d-flex justify-content-between">
+            <small
+              >Distance: <%= Math.round(parseInt(member.bid.distance)) %>
+              km</small
+            >
+          </li>
+          <% } else { %>
+          <li class="list-group-item"><small>No bid placed</small></li>
+          <% } %>
+        </ul>
+      </div>
+    </div>
+    <% } %>
+  </div>
+
+  <div class="mb-5">
+    <a class="card-link btn btn-primary" href="<%= baseUrl %>/auctions">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        fill="currentColor"
+        class="bi bi-arrow-bar-left"
+        viewBox="0 0 16 16"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5zM10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5z"
+        />
+      </svg>
+      <span>All auctions</span>
+    </a>
+  </div>
+
+  <% if (auction.contract) { %>
+  <div class="px-3 pt-2 pb-5"><%- auction.contract %></div>
+  <% } %>
+</div>
+
+<script>
+  const mapToken = '<%-process.env.MAPBOX_TOKEN%>';
+  const offers = {features: <%- JSON.stringify(offers) %>};
+  const closingTime = new Date("<%= auction.closingTime.toString() %>");
+
+  const getSplitClosingTime = (closingTime) => {
+    let diff = closingTime.getTime() - Date.now();
+
+    const SECOND = 1000;
+    const MINUTE = 60 * SECOND;
+    const HOUR = 60 * MINUTE;
+    const DAY = 24 * HOUR;
+
+    const days = Math.max(0, Math.floor(diff / DAY));
+    diff -= days * DAY;
+    const hours = Math.max(0, Math.floor(diff / HOUR));
+    diff -= hours * HOUR;
+    const minutes = Math.max(0, Math.floor(diff / MINUTE));
+    diff -= minutes * MINUTE;
+    const seconds = Math.max(0, Math.floor(diff / SECOND));
+
+    return { days, hours, minutes, seconds };
+  };
+
+  const daySelector = document.getElementById("remaining-days");
+  const hourSelector = document.getElementById("remaining-hours");
+  const minuteSelector = document.getElementById("remaining-minutes");
+  const secondSelector = document.getElementById("remaining-seconds");
+  const updateClosingTime = () => {
+    const time = getSplitClosingTime(closingTime);
+    daySelector.innerHTML = time.days;
+    hourSelector.innerHTML = time.hours;
+    minuteSelector.innerHTML = time.minutes;
+    secondSelector.innerHTML = time.seconds;
+  }
+  updateClosingTime();
+
+  setInterval(() => {
+    updateClosingTime();
+  }, 1000);
+</script>
+
+<script src="<%= baseUrl %>/javascripts/clusterMap.js"></script>

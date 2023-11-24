@@ -1,0 +1,59 @@
+<% layout('layouts/boilerplate') %>
+
+<div>
+  <h1>Broker Agreements</h1>
+
+  <div class="d-flex gap-3 py-3">
+    <% for (let agreement of page.data) { %>
+    <div class="card" style="width: 24rem">
+      <div class="card-body">
+        <h5 class="card-title"><%= agreement.title %></h5>
+        <% if (agreement.status == "accepted") { %>
+          <span class="badge bg-success p-2"><%= agreement.status %></span>
+        <% } else if (agreement.status == "rejected" || agreement.status == "expired") { %>
+          <span class="badge bg-danger p-2"><%= agreement.status %></span>
+        <% } else { %>
+          <span class="badge bg-primary p-2"><%= agreement.status %></span>
+        <% } %>
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+          <span class="text-muted">Representant</span>
+          <a href="<%= baseUrl %>/profile/<%= agreement.representant %>"><%= agreement.representant %></a>
+        </li>
+        <li class="list-group-item">
+          <span class="text-muted">Represented</span>
+          <a href="<%= baseUrl %>/profile/<%= agreement.represented %>"><%= agreement.represented %></a>
+        </li>
+        <li class="list-group-item">
+          <span class="text-muted">End date</span>
+          <%= displayDate(agreement.end_date) %>
+        </li>
+      </ul>
+      <% if (agreement.status == "pending" && ((currentUser.username ==
+      agreement.representant && agreement.representant_signature == '') ||
+      (currentUser.username == agreement.represented &&
+      agreement.represented_signature == ''))) { %>
+
+      <div class="card-body d-flex gap-3">
+        <form class="" method="POST" action="<%= baseUrl %>/broker/<%= agreement._id %>/accept">
+          <button type="submit"
+            class="btn btn-primary"
+            >Accept</a
+          >
+        </form>
+        <form class="" method="POST" action="<%= baseUrl %>/broker/<%= agreement._id %>/reject">
+          <button type="submit"
+            class="btn btn-danger"
+            >Reject</a
+          >
+        </form>
+      </div>
+      <% } %>
+    </div>
+
+    <% } %>
+  </div>
+
+  <%- include('../partials/pagination', { page, path: "/broker" }) %>
+</div>

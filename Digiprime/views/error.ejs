@@ -1,0 +1,28 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="row">
+  <div class="col-6 offset-3">
+    <div
+      class="alert alert-danger"
+      role="alert"
+      style="overflow-wrap: break-word"
+    >
+      <% if (process.env.NODE_ENV !== 'production') { %>
+      <h4 class="alert-heading"><%= statusCode %> | <%= err.message %></h4>
+      <p><%= err.stack %></p>
+      <% } else { %>
+      <!-- prettier-ignore -->
+      <% if (statusCode === 404) { %>
+      <h4 class="alert-heading">404 | Page not found</h4>
+      <% } else if (statusCode == 400) { %>
+      <h4 class="alert-heading">400 | You are not allowed to do that</h4>
+      <% } else { %>
+      <h4 class="alert-heading">
+        500 | Something bad happened. Please try again later.
+      </h4>
+      <!--prettier-ignore -->
+      <% } %>
+      <% } %>
+    </div>
+  </div>
+</div>

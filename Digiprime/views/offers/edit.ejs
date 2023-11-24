@@ -1,0 +1,173 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="row">
+  <div class="mb-3">
+    <h1 class="text-center">Edit Offer</h1>
+  </div>
+
+  <div class="col-md-6 offset-md-3 col-lg-4 offset-lg-4">
+    <form
+      action="<%= baseUrl %>/offers/<%= offer._id %>?_method=PUT"
+      method="POST"
+      novalidate
+      class="validated-form"
+      enctype="multipart/form-data"
+    >
+      <!-- <input type="hidden" name="_csrf" value="" /> -->
+
+      <div class="mb-3">
+        <label class="form-label" for="title">Title</label>
+        <input
+          class="form-control"
+          type="text"
+          id="title"
+          name="offer[title]"
+          value="<%= offer.title %>"
+          required
+        />
+        <div class="valid-feedback">Looks good!</div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label" for="location">Location</label>
+        <input
+          class="form-control"
+          type="text"
+          id="location"
+          name="offer[location]"
+          value="<%= offer.location %>"
+          required
+        />
+        <div class="valid-feedback">Looks good!</div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label" for="costumer">Offer interest</label>
+        <select
+          class="form-select"
+          aria-label=".form-select-sm example"
+          name="offer[costumer]"
+          id="costumer"
+        >
+          <!-- prettier-ignore -->
+          <% for (let costumer of costumers) { %>
+          <% if (offer.costumer === costumer) { %>
+          <option value="<%= costumer %>" selected><%= costumer %></option>
+          <% } else { %>
+          <option value="<%= costumer %>"><%= costumer %></option>
+          <% }%> <% } %>
+        </select>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label" for="referenceSector">Reference Sector</label>
+        <select
+          class="form-select"
+          aria-label=".form-select-sm example"
+          name="offer[referenceSector]"
+          id="referenceSector"
+        >
+          <!-- prettier-ignore -->
+          <% for (let referenceSector of referenceSectors) { %>
+          <% if (offer.referenceSector === referenceSector) { %>
+          <option value="<%= referenceSector %>" selected>
+            <%= referenceSector %>
+          </option>
+          <% } else { %>
+          <option value="<%= referenceSector %>"><%= referenceSector %></option>
+          <% }%> <% } %>
+        </select>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label" for="referenceType">Reference Type</label>
+        <select
+          class="form-select"
+          aria-label=".form-select-sm example"
+          name="offer[referenceType]"
+          id="referenceType"
+        >
+          <!-- prettier-ignore -->
+          <% for (let referenceType of referenceTypes) { %>
+          <% if (offer.referenceType === referenceType) { %>
+          <option value="<%= referenceType %>" selected>
+            <%= referenceType %>
+          </option>
+          <% } else { %>
+          <option value="<%= referenceType %>"><%= referenceType %></option>
+          <% }%> <% } %>
+        </select>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label" for="price">Offer Price</label>
+        <div class="input-group mb-3">
+          <span class="input-group-text" id="price-label">€</span>
+          <input
+            type="text"
+            class="form-control"
+            id="price"
+            placeholder="0.00"
+            aria-label="price"
+            aria-describedby="price-label"
+            name="offer[price]"
+            value="<%= offer.price %>"
+            required
+          />
+          <div class="valid-feedback">Looks good!</div>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label" for="description">Description</label>
+        <textarea
+          class="form-control"
+          type="text"
+          id="description"
+          name="offer[description]"
+          required
+        >
+            <%= offer.description %>
+        </textarea>
+        <div class="valid-feedback">Looks good!</div>
+      </div>
+
+      <div class="mb-3">
+        <label for="image" class="form-label">Multiple image input</label>
+        <input
+          class="form-control"
+          type="file"
+          id="image"
+          name="image"
+          multiple
+        />
+      </div>
+
+      <div class="mb-3">
+        <% offer.images.forEach(function(img, i) { %>
+        <img src="<%=img.thumbnail%> " class="img-thumbnail" alt="" />
+        <div class="form-check-inline">
+          <input
+            type="checkbox"
+            id="image-<%=i%>"
+            name="deleteImages[]"
+            value="<%=img.filename%>"
+          />
+        </div>
+        <label for="image-<%=i%>">Delete</label>
+        <% }) %>
+      </div>
+
+      <div class="card-body text-center">
+        <button class="btn btn-success">Update Offer</button>
+        <a
+          class="card-link btn btn-info col-5"
+          href="<%= baseUrl %>/offers/<%= offer._id %>"
+          >Return</a
+        >
+      </div>
+    </form>
+
+    <footer></footer>
+  </div>
+</div>

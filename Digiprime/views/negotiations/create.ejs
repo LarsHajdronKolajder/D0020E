@@ -1,0 +1,169 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="container mt-3">
+  <div class="row">
+    <div class="col-sm-6">
+      <div class="card mb-3">
+        <a href="<%= baseUrl %>/offers/<%= offer._id %>">
+          <% if (offer.images.length) {%>
+          <img class="img-fluid" alt="" src="<%=offer.images[0].url%> " />
+          <% }else { %>
+          <img
+            class="img-fluid"
+            alt=""
+            src="https://res.cloudinary.com/diq0t2bqj/image/upload/v1622925764/YelpCamp/kjhxxshjrdudgkoehoyl.jpg"
+          />
+          <% } %>
+        </a>
+        <div class="d-flex flex-row">
+          <h2 class="my-3 mx-4">
+            <a href="<%= baseUrl %>/offers/<%= offer._id %>"
+              ><%= offer.title %></a
+            >
+          </h2>
+          <span class="badge bg-success my-4"> <%= offer.costumer %> </span>
+        </div>
+
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item"><%= offer.description %></li>
+          <li class="list-group-item text-muted"><%= offer.location %></li>
+          <li class="list-group-item">€<%= offer.price %> / Piece</li>
+          <li class="list-group-item">
+            Submitted by
+            <a href="<%= baseUrl %>/profile/<%= offer.author.username %>"
+              ><%= offer.author.username %></a
+            >
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="col-sm-4">
+      <form
+        method="POST"
+        action="<%= baseUrl %>/negotiations/create/<%=offer._id%>"
+      >
+        <div class="form-floating mb-3">
+          <input
+            type="text"
+            class="form-control"
+            id="title"
+            aria-describedby="title"
+            name="title"
+            value=""
+            placeholder="Title"
+            required
+          />
+          <label for="title">Title</label>
+        </div>
+
+        <div class="">
+          <div class="d-flex">
+            <div class="col-9 form-floating mb-3">
+              <input
+                type="number"
+                class="form-control"
+                id="quantity"
+                name="quantity"
+                value=""
+                placeholder="Quantity"
+                required
+              />
+              <label for="quantity">Quantity</label>
+            </div>
+
+            <div class="col-3 form-floating">
+              <select class="form-select" name="unit" id="unit" required>
+                <option value="ton">ton</option>
+                <option value="kg">kg</option>
+                <option value="pieces">pieces</option>
+                <option value="boxes">boxes</option>
+              </select>
+              <label for="unit">Unit</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <div class="input-group">
+            <input
+              type="number"
+              class="form-control"
+              id="price"
+              aria-label="Euro amount (with dot and two decimal places)"
+              name="price"
+              value=""
+              placeholder=""
+              required
+            />
+            <span class="input-group-text">€</span>
+          </div>
+          <div id="priceHelpBlock" class="form-text px-1">
+            Initial price to start negotiation with
+          </div>
+        </div>
+
+        <div class="form-floating mb-3">
+          <input
+            type="text"
+            class="form-control"
+            id="location"
+            name="location"
+            placeholder="Location"
+            required
+          />
+          <label for="location">Location</label>
+          <div id="locationHelpBlock" class="form-text px-1"></div>
+        </div>
+
+        <div class="mb-3">
+          <%- include('../partials/contract-select-id', { contracts }) %>
+          <div id="contractHelpBlock" class="form-text px-1">
+            Contract to use in negotiation
+          </div>
+        </div>
+
+        <% if (currentUser.role == "broker") { %>
+        <div class="mt-3">
+          <div class="input-group">
+            <% if (agreements.length === 0) { %>
+            <select
+              id="brokerId"
+              class="form-select"
+              aria-label="select with button addon"
+              name="brokerId"
+              value=""
+              disabled
+            >
+              <option value="">No representations available</option>
+            </select>
+            <% } else { %>
+            <select
+              id="brokerId"
+              class="form-select"
+              aria-label="select with button addon"
+              name="brokerId"
+              value=""
+              required
+            >
+              <% for (let agreement of agreements) { %>
+              <option value="<%= agreement._id %>">
+                <%= agreement.represented %>
+              </option>
+              <% } %>
+            </select>
+            <% } %>
+          </div>
+          <div id="representHelpBlock" class="form-text px-1">
+            User to represent in the auction
+          </div>
+        </div>
+        <% } else { %>
+        <input type="hidden" id="brokerId" name="brokerId" value="" />
+        <% } %>
+
+        <button type="submit" class="btn btn-primary mt-3">Submit</button>
+      </form>
+    </div>
+  </div>
+</div>

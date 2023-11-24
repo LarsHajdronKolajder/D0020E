@@ -1,0 +1,71 @@
+<div
+  class="modal fade"
+  id="<%= modalId %>"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
+    <form class="" method="POST" action="<%= baseUrl %>/messages/new">
+      <!-- <input type="hidden" name="_csrf" value="" /> -->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">
+            Send message to <strong><%= to %></strong>
+          </h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <input
+            type="hidden"
+            class="form-control"
+            name="username"
+            value="<%= to %>"
+            required
+          />
+
+          <div class="form-floating mb-3">
+            <input
+              type="text"
+              class="form-control"
+              id="title"
+              name="title"
+              placeholder="Title"
+              value="<%= defaultTitle %>"
+              required
+            />
+            <label for="title">Title</label>
+          </div>
+
+          <div class="form-floating mb-3">
+            <textarea
+              class="form-control"
+              id="body"
+              name="body"
+              placeholder="Message"
+              rows="3"
+              required
+              style="min-height: 100px"
+            ></textarea>
+            <label for="body">Message</label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Close
+          </button>
+          <button type="submit" class="btn btn-primary">Send</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

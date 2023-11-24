@@ -1,0 +1,163 @@
+<nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="<%= baseUrl %>/">Digiprime</a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNavAltMarkup"
+      aria-controls="navbarNavAltMarkup"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-link" href="<%= baseUrl %>/">Home</a>
+        <a class="nav-link" href="<%= baseUrl %>/offers">Offers</a>
+        <a class="nav-link" href="<%= baseUrl %>/offers/new">New Offers</a>
+        <a class="nav-link" href="<%= baseUrl %>/offers/directory"
+          >Offers Directory</a
+        >
+        <% if (currentUser) { %>
+        <a class="nav-link" href="<%= baseUrl %>/auctions">Auctions</a>
+        <a class="nav-link" href="<%= baseUrl %>/negotiations">Negotiations</a>
+        <% } %>
+      </div>
+
+      <% if (currentUser) { %>
+
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item dropdown">
+          <a class="nav-link" data-bs-toggle="dropdown" aria-expanded="false">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-envelope" viewBox="0 0 16 16">
+              <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4Zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2Zm13 2.383-4.708 2.825L15 11.105V5.383Zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741ZM1 11.105l4.708-2.897L1 5.383v5.722Z"/>
+            </svg>
+            <% if (notifications.count > 0) { %>
+              <span class="badge bg-primary position-absolute top-15 translate-middle"><%= notifications.count %></span>
+            <% } %>
+          </a>
+
+          <ul class="dropdown-menu dropdown-menu-end px-3 py-2" style="width: 280px;">
+            <% if (notifications.count == 0) { %>
+              <li><strong>You're all caught up!</strong></li>
+              <li class="d-flex justify-content-between">
+                <small></small>
+                <a href="<%= baseUrl %>/notifications" class="btn btn-link m-0 p-0"><small>View all</small></a>
+              </li>
+            <% } else { %>
+              <% for (const notification of notifications.recent) { %> 
+                <li class="row mb-2 position-relative">
+                  <div class="text-primary"><%= notification.category %> <small class="text-muted"><%= formatDistanceToNow(notification.createdAt) %> ago</small></div>
+                  <small>
+                    <%= notification.message %>
+                  </small>
+                  <small><a href="<%= baseUrl %>/notifications/<%= notification._id %>" class="stretched-link">View</a></small>
+                </li>
+              <% } %>
+              <li class="d-flex justify-content-between">
+                  <form class="" method="POST" action="<%= baseUrl %>/notifications/seen?redirect=<%= originalUrl %>">
+                    <button type="submit" class="btn btn-link m-0 p-0"><small>Mark all as read</small></button>
+                  </form>
+                <a href="<%= baseUrl %>/notifications" class="btn btn-link m-0 p-0"><small>View all</small></a>
+              </li>
+            <% } %>
+          </ul>
+        </li>
+
+        <li class="nav-item dropdown mx-4">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            id="navbarDropdownMenuLink"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            <% if (currentUser.image && currentUser.image.url) { %>
+            <img
+              src="<%= currentUser.image.url %>"
+              width="30"
+              height="30"
+              class="rounded-circle"
+            />
+            <% } else { %>
+            <img
+              src="<%= baseUrl %>/pictures/user_pic.png"
+              width="30"
+              height="30"
+              class="rounded-circle"
+            />
+            <% } %> <% if (unreadMessages) { %>
+            <span
+              class="position-absolute top-15 translate-middle p-1 bg-danger border border-light rounded-circle"
+            >
+              <span class="visually-hidden">New alerts</span>
+            </span>
+            <% } %>
+          </a>
+          <ul
+            class="dropdown-menu dropdown-menu-end"
+            aria-labelledby="navbarDropdownMenuLink"
+          >
+            <li class="dropdown-header">
+              <h6>Signed in as:</h6>
+              <p style="margin: 0"><%= currentUser.username %></p>
+            </li>
+            <hr style="margin: 0.5rem 0" />
+            <li class="dropdown-header">
+              <h6>Broker agreements</h6>
+            </li>
+            <li>
+              <a class="dropdown-item" href="<%= baseUrl %>/broker">All agreements</a>
+            </li>
+            <hr style="margin: 0.5rem 0" />
+            <li class="dropdown-header">
+              <h6>Messages</h6>
+            </li>
+            <li>
+              <a class="dropdown-item" href="<%= baseUrl %>/messages">
+                Digibox <% if (unreadMessages) { %>
+                <span class="badge bg-primary"><%= unreadMessages %></span>
+                <% } %>
+              </a>
+            </li>
+            <hr style="margin: 0.5rem 0" />
+            <li class="dropdown-header">
+              <h6>Profile</h6>
+            </li>
+            <li>
+              <a
+                class="dropdown-item"
+                href="<%= baseUrl %>/profile/<%= currentUser.username %>"
+              >
+                Profile page
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="<%= baseUrl %>/profile/edit"
+                >Edit Profile</a
+              >
+            </li>
+            <hr style="margin: 0.5rem 0" />
+            <li>
+              <form action="<%= baseUrl %>/auth/logout" method="POST">
+                <!-- <input type="hidden" name="_csrf" value="" /> -->
+                <button type="submit" class="btn btn-link dropdown-item">
+                  Log out
+                </button>
+              </form>
+            </li>
+          </ul>
+        </li>
+      </ul>
+      <% } else {%>
+      <div class="navbar-nav ms-auto">
+        <a class="nav-link" href="<%= baseUrl %>/auth/login">Log In</a>
+      </div>
+      <% } %>
+    </div>
+  </div>
+</nav>

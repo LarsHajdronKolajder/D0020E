@@ -1,0 +1,95 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="container">
+  <div class="d-flex align-items-center justify-content-between">
+    <h2>Active Auctions</h2>
+    <div>
+      <a class="card-link btn btn-primary" href="<%= baseUrl %>/auctions/public"
+        >Public</a
+      >
+      <a
+        class="card-link btn btn-secondary"
+        href="<%= baseUrl %>/auctions/history"
+        >History</a
+      >
+    </div>
+  </div>
+
+  <% if (currentUser && currentUser.role == "broker") { %>
+  <form id="act-as" action="<%= baseUrl %>/auctions" method="GET" class="col-3">
+    <div class="filters input-group">
+      <select
+        class="form-select rounded-start border border-secondary"
+        id="user"
+        name="user"
+        aria-label=".form-select-sm example"
+        value="<%= page.query.user %>"
+      >
+        <option value=""><%= currentUser.username %></option>
+        <% for (let agreement of agreements) { if (page.query.user ===
+        agreement.represented) { %>
+        <option value="<%= agreement.represented %>" selected>
+          <%= agreement.represented %>
+        </option>
+        <% } else { %>
+        <option value="<%= agreement.represented %>">
+          <%= agreement.represented %>
+        </option>
+        <% }} %>
+      </select>
+      <button class="rounded-end search-btn btn btn-primary" type="submit">
+        View as
+      </button>
+    </div>
+  </form>
+  <% } %>
+
+  <div class="row mt-4 d-flex flex-column gap-4">
+    <% for (let auction of page.data) { %>
+    <div class="d-flex flex-row gap-2">
+      <div class="d-flex flex-column">
+        <div class="d-flex flex-row gap-2 align-items-center">
+          <a
+            href="<%= baseUrl %>/auctions/<%= auction._id %>"
+            class="h4 text-underline-hover"
+          >
+            <%= auction.name %>
+          </a>
+          <% if (auction.created_by === currentUser.username) { %>
+          <span class="badge bg-primary fs-6 my-3">Created by me</span>
+          <% } %>
+          <span class="badge bg-primary fs-6 my-3">
+            <%= auction.privacy %>
+          </span>
+          <span class="badge bg-primary fs-6 my-3"
+            ><%= auction.auction_type %></span
+          >
+          <span class="badge bg-success fs-6 my-3"
+            ><%= auction.reference_sector %></span
+          >
+          <span class="badge bg-success fs-6 my-3"
+            ><%= auction.reference_type %></span
+          >
+          <% if (auction.closed) { %>
+          <span class="badge bg-danger fs-6 my-3">CLOSED</span>
+          <% } %>
+        </div>
+        <div class="">
+          <span class="text-muted">
+            <!-- prettier-ignore -->
+            <% if (auction.closingTime < Date.now()) { %>
+              ended <%= formatDistanceToNow(new Date(auction.closing_time)) %> ago
+            <% } else { %>
+              ends in <%= formatDistanceToNow(new Date(auction.closing_time)) %>
+            <% } %>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <% } %>
+  </div>
+
+  <!-- prettier-ignore -->
+  <%- include('../partials/pagination', { page, path: "/auctions" }) %>
+</div>

@@ -1,0 +1,162 @@
+<% layout('layouts/boilerplate') %>
+
+<h1 class="mb-4">
+  Create Auction
+  <span class="align-middle fs-4">
+    <span class="badge bg-primary"><%= info.auctionType %></span>
+    <span class="badge bg-primary"><%= info.sector %></span>
+    <span class="badge bg-primary"><%= info.type %></span>
+  </span>
+</h1>
+
+<form method="POST" action="<%= baseUrl %>/auctions/create" class="mb-5">
+  <!-- <input type="hidden" name="_csrf" value="" /> -->
+
+  <div class="form-floating mb-3">
+    <input
+      type="text"
+      class="form-control"
+      id="auctionTitle"
+      name="auctionTitle"
+      placeholder="Auction Title"
+      required
+    />
+    <label for="auctionTitle">Auction Title</label>
+    <div id="auctionTitleHelpBlock" class="form-text px-1"></div>
+  </div>
+
+  <div class="form-floating mb-3">
+    <input
+      type="text"
+      class="form-control"
+      id="location"
+      name="location"
+      placeholder="Location"
+      required
+    />
+    <label for="location">Location</label>
+    <div id="locationHelpBlock" class="form-text px-1"></div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <div class="form-floating mb-3">
+        <input
+          type="datetime-local"
+          class="form-control"
+          id="closingTime"
+          name="closingTime"
+          placeholder="Closing Time"
+          required
+        />
+        <label for="closingTime">Closing Time</label>
+        <div id="closingTimeHelpBlock" class="form-text px-1">
+          Date and time when the auction closes for new bids
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="d-flex">
+        <div class="col-9 form-floating mb-3">
+          <input
+            type="text"
+            class="form-control"
+            id="quantity"
+            name="quantity"
+            placeholder="Quantity"
+            required
+          />
+          <label for="quantity">Quantity</label>
+        </div>
+
+        <div class="col-3 form-floating">
+          <select class="form-select" name="unit" id="unit" required>
+            <option value="ton">ton</option>
+            <option value="kg">kg</option>
+            <option value="pieces">pieces</option>
+            <option value="boxes">boxes</option>
+          </select>
+          <label for="unit">Unit</label>
+        </div>
+      </div>
+      <div id="quantityHelpBlock" class="form-text px-1"></div>
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <%- include('../partials/contract-select-id', { contracts }) %>
+    <div id="contractHelpBlock" class="form-text px-1">
+      Contract for the auction.
+    </div>
+  </div>
+
+  <% if (currentUser.role == "broker") { %>
+  <div class="mb-3">
+    <div class="input-group">
+      <% if (agreements.length === 0) { %>
+      <select
+        id="brokerId"
+        class="form-select"
+        aria-label="select with button addon"
+        name="brokerId"
+        value=""
+        disabled
+      >
+        <option value="">No representations available</option>
+      </select>
+      <% } else { %>
+      <select
+        id="brokerId"
+        class="form-select"
+        aria-label="select with button addon"
+        name="brokerId"
+        value=""
+        required
+      >
+        <% for (let agreement of agreements) { %>
+        <option value="<%= agreement._id %>">
+          <%= agreement.represented %>
+        </option>
+        <% } %>
+      </select>
+      <% } %>
+    </div>
+    <div id="representHelpBlock" class="form-text px-1">
+      User to represent in the auction
+    </div>
+  </div>
+  <% } else { %>
+  <!-- <input type="hidden" id="brokerId" name="brokerId" value="" /> -->
+  <% } %>
+
+  <div class="mb-3" id="cluster-map"></div>
+
+  <h3>Invited offers</h3>
+  <div class="row row-cols-md-4 g-4">
+    <% for (let offer of offers) { %>
+    <!-- prevent-formatting -->
+    <%- include('../partials/offer-card', { offer }) %>
+    <input
+      type="hidden"
+      id="offerIds"
+      name="offerIds"
+      value="<%= offer.id %>"
+      required
+    />
+    <% } %>
+  </div>
+
+  <div class="d-flex flex-row justify-content-end gap-2">
+    <!-- <a href="#" class="btn btn-secondary mb-5 px-4 py-2">Cancel Auction</a> -->
+
+    <button type="submit" class="btn btn-primary mb-5 px-4 py-2">
+      Submit Auction
+    </button>
+  </div>
+</form>
+
+<script>
+  const mapToken = '<%-process.env.MAPBOX_TOKEN%>';
+  const offers = {features: <%- JSON.stringify(offers) %>};
+</script>
+<script src="<%= baseUrl %>/javascripts/clusterMap.js"></script>

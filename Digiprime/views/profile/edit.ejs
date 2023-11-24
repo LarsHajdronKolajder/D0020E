@@ -1,0 +1,192 @@
+<% layout('layouts/boilerplate') %>
+
+<link rel="stylesheet" href="<%= baseUrl %>/stylesheets/profile.css">
+<link rel="stylesheet" href="<%= baseUrl %>/stylesheets/edit.css">
+
+<form method="POST" action="<%= baseUrl %>/profile/edit">
+  <!-- <input type="hidden" name="_csrf" value="" /> -->
+  
+  <div class="container rounded bg-white mt-1 mb-5">
+    <div class="row">
+      <div class="col-md-3 border-right">
+        <div class="d-flex flex-column align-items-center text-center p-3 py-5">
+          <% if (currentUser.image && currentUser.image.url) {%>
+            <img
+              class="rounded-circle mt-5"
+              width="150px"
+              src="<%= currentUser.image.url %>"
+            />
+          <% } else {%>
+            <img
+              class="rounded-circle mt-5"
+              width="150px"
+              src="<%= baseUrl %>/pictures/user_pic.png"
+            />
+          <% } %>
+          <span class="font-weight-bold"><%= currentUser.username %></span>
+          <span class="text-black-50"><%= currentUser.email %></span>
+        </div>
+      </div>
+      <div class="col-md-5 border-right">
+        <div class="p-3 py-5">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="text-right">Profile Settings</h4>
+          </div>
+          <div class="row mt-2">
+            <div class="col-md-6">
+              <label class="labels">Name</label>
+              <input
+                id="firstname"
+                name="firstname"
+                type="text"
+                class="form-control"
+                placeholder="First name"
+                value="<%= profile.firstname %>"
+              />
+            </div>
+            <div class="col-md-6">
+              <label class="labels">Surname</label>
+              <input
+                id="surname"
+                name="surname"
+                type="text"
+                class="form-control"
+                value="<%= profile.surname %>"
+                placeholder="Surname"
+              />
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="col-md-12">
+              <label class="labels">Mobile Number</label>
+              <input
+                id="phone"
+                name="phone"
+                type="text"
+                class="form-control"
+                placeholder="Phone number"
+                value="<%= profile.phone %>"
+              />
+            </div>
+            <div class="col-md-12">
+              <label class="labels">Address Line</label>
+              <input
+                id="address"
+                name="address"
+                type="text"
+                class="form-control"
+                placeholder="Address line"
+                value="<%= profile.address %>"
+              />
+            </div>
+            <div class="col-md-12">
+              <label class="labels">Postcode</label>
+              <input
+                id="postcode"
+                name="postcode"
+                type="text"
+                class="form-control"
+                placeholder="Postal code"
+                value="<%= profile.postcode %>"
+              />
+            </div>
+            <div class="col-md-12">
+              <label class="labels">City/Area</label>
+              <input
+                id="area"
+                name="area"
+                type="text"
+                class="form-control"
+                placeholder="Area"
+                value="<%= profile.area %>"
+              />
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="col-md-6">
+              <label class="labels">Country</label>
+              <input
+                id="country"
+                name="country"
+                type="text"
+                class="form-control"
+                placeholder="Country"
+                value="<%= profile.country %>"
+              />
+            </div>
+            <div class="col-md-6">
+              <label class="labels">State/Region</label>
+              <input
+                id="state"
+                name="state"
+                type="text"
+                class="form-control"
+                value="<%= profile.state %>"
+                placeholder="State/Region"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="p-3 py-5">
+          <div class="d-flex justify-content-between align-items-center experience">
+            <span>Trading Information</span>
+          </div>
+          <br />
+          <div class="col-md-12">
+            <label class="labels">Trading as</label>
+            <select
+              class="form-select"
+              aria-label="Default select example"
+              id="role"
+              name="role"
+              value="<%= currentUser.role %>"
+              required
+            >
+              <option value="user" <%= currentUser.role === "user" ? "selected" : "" %>>User</option>
+              <option value="broker" <%= currentUser.role === "broker" ? "selected" : "" %>>Broker</option>
+            </select>
+
+          </div>
+
+          <br />
+
+          <div class="col-md-12">
+            <label class="labels">Company</label>
+            <input
+              id="company"
+              name="company"
+              type="text"
+              class="form-control"
+              value="<%= profile.company %>"
+              placeholder="Company Name"
+            />
+          </div>
+
+          <br />
+
+          <div class="col-md-12">
+            <div class="form-group">
+              <label for="details">Description</label>
+              <textarea
+                class="form-control"
+                id="description"
+                name="description"
+                value="<%= profile.description %>"
+                rows="3"
+              ></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-5 text-center">
+        <button class="btn btn-primary profile-button" type="submit">
+          Save Profile
+        </button>
+      </div>
+      
+    </div>
+  </div>
+</form>

@@ -1,0 +1,207 @@
+<% layout('layouts/boilerplate') %>
+<link rel="stylesheet" href="<%= baseUrl %>/stylesheets/stars.css" />
+
+<div class="row">
+  <div class="col-6">
+    <div id="carouselControls" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-inner">
+        <% offer.images.forEach((img, i)=> { %>
+        <div class="carousel-item <%= i === 0 ? 'active' : '' %>">
+          <img src="<%= img.url %>" class="d-block w-100" alt="" />
+        </div>
+        <% }) %>
+      </div>
+
+      <% if (offer.images.length > 1) { %>
+      <button
+        class="carousel-control-prev"
+        type="button"
+        data-bs-target="#carouselControls"
+        data-bs-slide="prev"
+      >
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button
+        class="carousel-control-next"
+        type="button"
+        data-bs-target="#carouselControls"
+        data-bs-slide="next"
+      >
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+
+      <% } %>
+    </div>
+
+    <div class="card mb-3">
+      <div class="d-flex flex-row">
+        <h2 class="my-3 mx-4"><%= offer.title %></h2>
+        <span class="badge bg-success my-4"> <%= offer.costumer %> </span>
+      </div>
+
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item"><%= offer.referenceSector %></li>
+        <li class="list-group-item"><%= offer.referenceType %></li>
+        <li class="list-group-item"><%= offer.price %> <%= offer.unit %></li>
+        <li class="list-group-item"><%= offer.description %></li>
+        <li class="list-group-item text-muted"><%= offer.location %></li>
+        <li class="list-group-item">
+          Submitted by
+          <a href="<%= baseUrl %>/profile/<%= offer.author.username %>"
+            ><%= offer.author.username %></a
+          >
+        </li>
+      </ul>
+
+      <% if (currentUser && offer.author.equals(currentUser._id) ||
+      hasBrokerAgreement) { %>
+      <div class="card-body text-center d-flex gap-2 justify-content-between">
+        <a
+          class="card-link btn btn-primary col-3"
+          href="<%= baseUrl %>/offers/<%= offer._id %>/edit"
+          >Edit</a
+        >
+        <form
+          class="col-3"
+          action="<%= baseUrl %>/offers/<%= offer._id %>?_method=DELETE"
+          method="POST"
+        >
+          <!-- <input type="hidden" name="_csrf" value="" /> -->
+          <button type="submit" class="btn btn-danger w-100">Delete</button>
+        </form>
+        <a
+          class="card-link btn btn-primary"
+          href="<%= baseUrl %>/auctions/create-public?offerId=<%= offer.id %>"
+          >Create auction</a
+        >
+      </div>
+      <% } %>
+      <div class="card-footer text-muted">
+        created <%= formatDistanceToNow(new Date(offer._id.getTimestamp())) %>
+        ago
+      </div>
+    </div>
+    <a
+      class="btn btn-primary"
+      href="<%= baseUrl %>/negotiations/create/<%= offer._id %>"
+      role="button"
+      >Direct Negotiation</a
+    >
+  </div>
+  <div class="col-6">
+    <div class="mb-3" id="map"></div>
+    <div class="card">
+      <% if (currentUser) { %>
+      <div class="card-body">
+        <h2 class="card-title">Leave a Review</h2>
+        <!-- <a href="<%= baseUrl %>/offers">All offers</a> -->
+        <form
+          action="<%= baseUrl %>/offers/<%=offer._id%>/reviews"
+          method="POST"
+          class="mb-3 validated-form"
+          novalidate
+        >
+          <!-- <div class="mb-3">
+                                <label class="form-label" for="rating">Rating</label>
+                                <input class="form-range" type="range" min="1" max="5" name="review[rating]" id="rating">
+                            </div> -->
+          <div>
+            <fieldset class="starability-basic">
+              <input
+                type="radio"
+                id="no-rate"
+                class="input-no-rate"
+                name="review[rating]"
+                value="1"
+                checked
+                aria-label="No rating."
+              />
+              <input
+                type="radio"
+                id="first-rate1"
+                name="review[rating]"
+                value="1"
+              />
+              <label for="first-rate1" title="Terrible">1 star</label>
+              <input
+                type="radio"
+                id="first-rate2"
+                name="review[rating]"
+                value="2"
+              />
+              <label for="first-rate2" title="Not good">2 stars</label>
+              <input
+                type="radio"
+                id="first-rate3"
+                name="review[rating]"
+                value="3"
+              />
+              <label for="first-rate3" title="Average">3 stars</label>
+              <input
+                type="radio"
+                id="first-rate4"
+                name="review[rating]"
+                value="4"
+              />
+              <label for="first-rate4" title="Very good">4 stars</label>
+              <input
+                type="radio"
+                id="first-rate5"
+                name="review[rating]"
+                value="5"
+              />
+              <label for="first-rate5" title="Amazing">5 stars</label>
+            </fieldset>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label" for="body">Review Text</label>
+            <textarea
+              class="form-control"
+              name="review[body]"
+              id="body"
+              cols="30"
+              rows="3"
+              required
+            ></textarea>
+            <div class="valid-feedback">Looks good!</div>
+          </div>
+          <div class="d-grid gap-2">
+            <button class="btn btn-success">Submit</button>
+          </div>
+        </form>
+        <% } %>
+      </div>
+    </div>
+
+    <% for (let review of offer.reviews) { %>
+    <div class="card mb-3">
+      <div class="card-body">
+        <h5 class="card-title"><%= review.author.username %></h5>
+        <p class="starability-result" data-rating="<%= review.rating %>">
+          Rated: <%= review.rating %> stars
+        </p>
+        <!-- <h6 class="card-subtitle mb-2 text-muted">By <%= review.author.username %></h6> -->
+        <p class="card-text">Review: <%= review.body %></p>
+        <% if (currentUser && review.author.equals(currentUser._id)) { %>
+        <form
+          action="<%= baseUrl %>/offers/<%= offer._id %>/reviews/<%= review._id %>?_method=DELETE"
+          method="POST"
+        >
+          <!-- <input type="hidden" name="_csrf" value="" /> -->
+          <button class="btn btn-sm btn-danger">Delete</button>
+        </form>
+        <% } %>
+      </div>
+    </div>
+    <% } %>
+  </div>
+</div>
+
+<script>
+  const mapToken = '<%-process.env.MAPBOX_TOKEN%>';
+  const offer = <%- JSON.stringify(offer) %>;
+</script>
+<script src="<%= baseUrl %>/javascripts/showPageMap.js"></script>

@@ -1,0 +1,207 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="row">
+  <div class="mb-3">
+    <h1 class="text-center">New Offer</h1>
+  </div>
+  <div class="col-md-6 offset-md-3 col-lg-4 offset-lg-4">
+    <form
+      action="<%= baseUrl %>/offers"
+      id="myform"
+      method="POST"
+      novalidate
+      class="validated-form"
+      enctype="multipart/form-data"
+    >
+      <!-- <input type="hidden" name="_csrf" value="" /> -->
+      <div class="form-floating mb-3">
+        <input
+          class="form-control"
+          type="text"
+          id="title"
+          name="offer[title]"
+          placeholder="title"
+          required
+        />
+        <label class="form-label" for="title">Title</label>
+        <div class="valid-feedback">Looks good!</div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label" for="man_code">Fetch Data</label>
+        <div class="input-group mb-3">
+          <input
+            type="text"
+            class="form-control"
+            id="man_code"
+            placeholder="Optional"
+            aria-label="man_code"
+            aria-describedby="man_code-label"
+            optional
+          />
+<!-- Added code -->
+          <select
+          class="input-group-text"
+          id="fetch_type"
+        >
+          <option value="bat">Battery</option>
+          <option value="mancode">Automotive</option>
+        </select>
+<!-- Added code -->
+          <th scope="col"><a class="btn btn-primary customActionButton" style="float:right;" role="button">Fetch data</a></th>
+          <!-- <button id="customActionButton" type="button" class="btn btn-primary">Retrieve Data</button> --->
+        </div>
+      </div>
+
+
+      <div class="form-floating mb-3">
+        <input
+          class="form-control"
+          type="text"
+          id="location"
+          name="offer[location]"
+          placeholder="location"
+          required
+        />
+        <label class="form-label" for="location">Location</label>
+        <div class="valid-feedback">Looks good!</div>
+      </div>
+
+      <!-- <div class="mb-3">
+                    <label class="form-label" for="image">Image Url</label>
+                    <input class="form-control" type="text" id="image" name="offer[image]" required>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                </div> -->
+
+      <% if (currentUser.role == "broker") { %>
+      <div class="mb-3">
+        <label class="form-label" for="costumer">Create offer as</label>
+        <select
+          id="brokerId"
+          class="form-select"
+          aria-label="select with button addon"
+          name="actAs"
+          value=""
+          required
+        >
+          <% for (const agreement of agreements) { %>
+          <option value="<%= agreement.represented %>">
+            <%= agreement.represented %>
+          </option>
+          <% } %>
+        </select>
+      </div>
+      <% } %>
+
+      <div class="mb-3">
+        <label class="form-label" for="costumer">Offer interest</label>
+        <select
+          class="form-select"
+          aria-label=".form-select-sm example"
+          name="offer[costumer]"
+          id="costumer"
+        >
+          <% for (let costumer of costumers) { %>
+          <option value="<%= costumer %>"><%= costumer %></option>
+          <% } %>
+        </select>
+      </div>
+
+
+      <div class="mb-3">
+        <label class="form-label" for="referenceSector">Reference sector / Value chain position</label>
+        <div class="input-group">
+          <input type="text" class="form-control" aria-label=".form-select-sm example" name="offer[referenceSector]" id="referenceSector" placeholder="Enter a value manually">
+          <select class="form-select" id="referenceSectorSelector">
+            <option value="" selected disabled>Select an option</option>
+            <% for (let referenceSector of referenceSectors) { %>
+              <option value="<%= referenceSector %>"><%= referenceSector %></option>
+            <% } %>
+          </select>
+        </div>
+      </div>
+
+      
+      <div class="mb-3">
+        <label class="form-label" for="referenceType">Reference type / Circular entity</label>
+        <div class="input-group">
+          <input type="text" class="form-control" aria-label=".form-select-sm example" name="offer[referenceType]" id="referenceType" placeholder="Enter a value manually">
+          <select class="form-select" id="referenceTypeSelector">
+            <option value="" selected disabled>Select an option</option>
+            <% for (let referenceType of referenceTypes) { %>
+              <option value="<%= referenceType %>"><%= referenceType %></option>
+            <% } %>
+          </select>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label" for="price">Offer Price</label>
+        <div class="input-group mb-3">
+          <input
+            type="text"
+            class="form-control"
+            id="price"
+            placeholder="0.00"
+            aria-label="price"
+            aria-describedby="price-label"
+            name="offer[price]"
+            required
+          />
+          <select
+            class="input-group-text"
+            name="offer[unit]"
+            id="unit"
+            required
+          >
+            <option value="€/kg">€/kg</option>
+            <option value="€/piece">€/piece</option>
+          </select>
+          <div class="valid-feedback">Looks good!</div>
+        </div>
+      </div>
+
+      <div class="form-floating mb-3">
+        <textarea
+          class="form-control"
+          type="text"
+          id="description"
+          name="offer[description]"
+          placeholder="description"
+          required
+        ></textarea>
+        <label class="form-label" for="description">Description</label>
+        <div class="valid-feedback">Looks good!</div>
+      </div>
+
+      <div class="mb-3">
+        <label for="image" class="form-label">Multiple image input</label>
+        <input
+          class="form-control"
+          type="file"
+          id="image"
+          name="image"
+          multiple
+        />
+      </div>
+
+      <!-- <div class="mb-3">
+                    <button class="btn btn-success">Add Offer</button>
+                </div> -->
+      <div class="card-body text-center">
+        <button class="btn btn-success col-5">Add Offer</button>
+        <a class="card-link btn btn-info col-5" href="<%= baseUrl %>/offers"
+          >Return</a
+        >
+      </div>
+    </form>
+
+
+    <footer></footer>
+  </div>
+</div>
+<script src="<%= baseUrl %>/javascripts/customAction.js"></script>
+<script src="<%= baseUrl %>/javascripts/formController.js"></script>
+<script src="<%= baseUrl %>/javascripts/referenceFillers.js"></script>

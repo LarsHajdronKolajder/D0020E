@@ -1,0 +1,268 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="container mt-3">
+  <div class="row justify-content-between mb-3">
+    <div class="mb-2">
+      <div class="d-flex gap-2">
+        <h2><%= negotiation.name %></h2>
+        <% if (negotiation.status === "accepted") { %>
+        <span class="badge bg-success fs-6 my-3">Accepted</span>
+        <% } else if (negotiation.status === "rejected") { %>
+        <span class="badge bg-danger fs-6 my-3">Rejected</span>
+        <% } %>
+      </div>
+
+      <% if (isRepresenting) { %>
+      <p class="text-muted">Representing <%= isRepresenting.username %></p>
+      <% } %>
+    </div>
+
+    <div class="row gap-2">
+      <div class="col-sm-6">
+        <div class="card mb-5">
+          <a href="<%= baseUrl %>/offers/<%= offer._id %>">
+            <% if (offer.images.length) {%>
+            <img class="img-fluid" alt="" src="<%=offer.images[0].url%> " />
+            <% } else { %>
+            <img
+              class="img-fluid rounded"
+              alt=""
+              src="https://res.cloudinary.com/diq0t2bqj/image/upload/v1622925764/YelpCamp/kjhxxshjrdudgkoehoyl.jpg"
+            />
+            <% } %>
+          </a>
+          <div class="d-flex flex-row">
+            <h2 class="my-3 mx-4">
+              <a href="<%= baseUrl %>/offers/<%= offer._id %>"
+                ><%= offer.title %></a
+              >
+            </h2>
+            <span class="badge bg-success my-4"> <%= offer.costumer %> </span>
+          </div>
+
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item text-muted"><%= offer.location %></li>
+            <li class="list-group-item">€<%= offer.price %> / Piece</li>
+            <li class="list-group-item">
+              Submitted by
+              <a href="<%= baseUrl %>/profile/<%= offer.author.username %>"
+                ><%= offer.author.username %></a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="col-sm-6 row">
+        <div class="row">
+          <ul class="list-group" style="padding: 0">
+            <li class="list-group-item d-flex justify-content-between">
+              <h6>
+                <strong>
+                  <a href="<%= baseUrl %>/profile/<%= negotiation.created_by %>"
+                    ><%= negotiation.created_by %></a
+                  >
+                </strong>
+              </h6>
+              <% if (offer.costumer === "Demand") { %>
+              <div>
+                <span class="text-muted">Creator of Negotiation</span>
+                <span class="badge bg-primary rounded-pill">Seller</span>
+              </div>
+              <% } else if (offer.costumer === "Supply") { %>
+              <div>
+                <span class="text-muted">Creator of Negotiation</span>
+                <span class="badge bg-primary rounded-pill">Buyer</span>
+              </div>
+              <% } %>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+              <h6>
+                <strong>
+                  <a href="<%= baseUrl %>/profile/<%= negotiation.seller %>"
+                    ><%= negotiation.seller %></a
+                  >
+                </strong>
+              </h6>
+              <% if (offer.costumer === "Demand") { %>
+              <div>
+                <span class="text-muted">Creator of Offer</span>
+                <span class="badge bg-primary rounded-pill">Buyer</span>
+              </div>
+              <% } else if (offer.costumer === "Supply") { %>
+              <div>
+                <span class="text-muted">Creator of Offer</span>
+                <span class="badge bg-primary rounded-pill">Seller</span>
+              </div>
+              <% } %>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+              <h6><strong><%= negotiation.reference_sector %></strong></h6>
+              <span class="text-muted">Reference Sector</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+              <h6><strong><%= negotiation.reference_type %></strong></h6>
+              <span class="text-muted">Reference Type</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+              <h6>
+                <strong
+                  ><%= negotiation.quantity %> <%= negotiation.unit %></strong
+                >
+              </h6>
+              <span class="text-muted">Quantity</span>
+            </li>
+          </ul>
+        </div>
+
+        <% if (!negotiation.contract) { %>
+        <div class="row mt-3">
+          <ul class="list-group" style="padding: 0">
+            <li class="list-group-item d-flex justify-content-between">
+              <h6><strong><%= negotiation.offer_user %></strong></h6>
+              <span class="text-muted">Bid by</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+              <h6><strong>€<%= negotiation.current_offer %></strong></h6>
+              <span class="text-muted">Current bid</span>
+            </li>
+          </ul>
+
+          <% if (negotiation.status === "rejected") { %>
+          <div class="mt-4">
+            <p>
+              <strong>This negotiation has been rejected.</strong>
+            </p>
+          </div>
+          <% } else if (currentUser.role === "broker" && !isRepresenting) { %>
+
+          <form
+            class="input-group mt-1"
+            method="POST"
+            action="<%= baseUrl %>/negotiations/<%= negotiation._id %>/represent"
+            style="padding: 0; height: 24px"
+          >
+            <select
+              id="brokerId"
+              class="form-select"
+              aria-label="select with button addon"
+              name="brokerId"
+              value=""
+              required
+            >
+              <% for (const represent of canRepresent) { %>
+              <option value="<%= represent.agreementId %>">
+                <%= represent.username %>
+              </option>
+              <% } %>
+            </select>
+            <button type="submit" class="input-group-text btn-primary">
+              Represent
+            </button>
+          </form>
+
+          <% } else if (currentUsername !== negotiation.offer_user) { %>
+
+          <form
+            class="input-group mt-1"
+            method="POST"
+            action="<%= baseUrl %>/negotiations/<%= negotiation._id %>"
+            style="padding: 0"
+          >
+            <!-- <input type="hidden" name="_csrf" value="" /> -->
+            <span class="input-group-text">€</span>
+            <input
+              id="bid"
+              name="bid"
+              type="text"
+              class="form-control"
+              aria-label="bid"
+              placeholder="0.00"
+              required
+            />
+            <button type="submit" class="input-group-text btn-primary">
+              Counter offer
+            </button>
+          </form>
+
+          <div class="row d-flex flex-row gap-2">
+            <form
+              class="input-group mt-2"
+              method="POST"
+              action="<%= baseUrl %>/negotiations/<%= negotiation._id %>/accept"
+              style="display: inline; width: auto; padding: 0"
+            >
+              <button type="submit" class="input-group-text btn-primary">
+                Accept Offer
+              </button>
+            </form>
+
+            <form
+              class="input-group mt-2"
+              method="POST"
+              action="<%= baseUrl %>/negotiations/<%= negotiation._id %>/cancel"
+              style="display: inline; width: auto; padding: 0"
+            >
+              <button type="submit" class="input-group-text btn-danger">
+                Reject offer
+              </button>
+            </form>
+          </div>
+          <% } else { %>
+          <div class="mt-4">
+            <p>
+              <strong
+                >You have made the latest offer. Waiting for a decision from <%
+                if (negotiation.created_by === negotiation.offer_user) { %>
+                <a href="<%= baseUrl %>/profile/<%= negotiation.seller %>">
+                  <%= negotiation.seller %></a
+                >
+                <% } else { %>
+                <a href="<%= baseUrl %>/profile/<%= negotiation.created_by %>"
+                  ><%= negotiation.created_by %></a
+                >
+                <% } %>
+              </strong>
+            </p>
+
+            <form
+              class="input-group mt-2"
+              method="POST"
+              action="<%= baseUrl %>/negotiations/<%= negotiation._id %>/cancel"
+              style="display: inline; width: auto; padding: 0"
+            >
+              <button type="submit" class="input-group-text btn-danger">
+                Cancel negotiation
+              </button>
+            </form>
+          </div>
+          <% } %>
+        </div>
+        <% } else { %>
+        <!-- contract -->
+
+        <!-- <div class="row mt-3">
+          <ul class="list-group" style="padding: 0">
+            <li class="list-group-item d-flex justify-content-between">
+              <h6><strong><%= negotiation.contract.owner %></strong></h6>
+              <span class="text-muted">Creator</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+              <h6><strong><%= negotiation.contract.buyer %></strong></h6>
+              <span class="text-muted">Participant</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+              <h6><a href="<%= baseUrl %>/offers/<%= offer._id %>"><%= offer.title %></a></strong></h6>
+              <span class="text-muted">Offer</span>
+            </li>
+          </ul>
+        </div> -->
+        <% } %>
+      </div>
+    </div>
+  </div>
+
+  <% if (negotiation.contract) { %>
+  <div class="row mx-auto card p-4"><%= negotiation.contract %></div>
+  <% } %>
+</div>

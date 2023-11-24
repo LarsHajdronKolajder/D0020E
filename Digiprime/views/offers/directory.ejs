@@ -1,0 +1,173 @@
+<% layout('layouts/boilerplate') %>
+
+<form
+  id="search-directory"
+  action="<%= baseUrl %>/offers/directory"
+  method="GET"
+  class="mb-5"
+>
+  <div class="filters input-group">
+    <label
+      class="bg-light rounded-start input-group-text border border-secondary"
+      for="costume"
+      >Offer Interest</label
+    >
+    <select
+      class="form-select rounded-end border border-secondary"
+      id="costumer"
+      name="costumer"
+      aria-label=".form-select-sm example"
+      value="<%= page.query.interest %>"
+    >
+      <option value="">Choose..</option>
+      <!-- prettier-ignore -->
+      <% for (let costumer of costumers) {
+        if (page.query.costumer === costumer) {
+      %>
+      <option value="<%= costumer %>" selected><%= costumer %></option>
+      <% } else { %>
+      <option value="<%= costumer %>"><%= costumer %></option>
+      <% }} %>
+    </select>
+
+    <label
+      class="bg-light rounded-start input-group-text border border-secondary"
+      for="referenceSector"
+      >Reference Sector</label
+    >
+    <select
+      class="form-select rounded-end border border-secondary"
+      id="referenceSector"
+      name="referenceSector"
+      aria-label=".form-select-sm example"
+    >
+      <option value="">Choose..</option>
+      <!-- prettier-ignore -->
+      <% for (let referenceSector of referenceSectors) {
+        if (page.query.referenceSector === referenceSector) {
+      %>
+      <option value="<%= referenceSector %>" selected>
+        <%= referenceSector %>
+      </option>
+      <% } else { %>
+      <option value="<%= referenceSector %>"><%= referenceSector %></option>
+      <% }} %>
+    </select>
+
+    <label
+      class="bg-light rounded-start input-group-text border border-secondary"
+      for="referenceType"
+      >Reference Type</label
+    >
+    <select
+      class="form-select rounded-end border border-secondary"
+      id="referenceType"
+      name="referenceType"
+      aria-label=".form-select-sm example"
+    >
+      <option value="">Choose..</option>
+      <!-- prettier-ignore -->
+      <% for (let referenceType of referenceTypes) {
+        if (page.query.referenceType === referenceType) {
+      %>
+      <option value="<%= referenceType %>" selected>
+        <%= referenceType %>
+      </option>
+      <% } else { %>
+      <option value="<%= referenceType %>"><%= referenceType %></option>
+      <% }} %>
+    </select>
+    <button class="rounded search-btn btn btn-primary" type="submit">
+      Search
+    </button>
+  </div>
+</form>
+
+<div class="container">
+  <form method="GET" action="<%= baseUrl %>/auctions/create">
+    <button
+      id="createAuctionBtn"
+      type="submit"
+      class="btn btn-primary mb-3"
+      disabled
+    >
+      Create auction from selection
+    </button>
+
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+      <!-- prettier-ignore -->
+      <% for (let offer of page.data) { %>
+        <%- include('../partials/offer-default', { offer, includeSelectForAuction: true }) %>
+      <% } %>
+    </div>
+  </form>
+
+  <!-- prettier-ignore -->
+  <%- include('../partials/pagination', { page, path: "/offers/directory" }) %>
+</div>
+
+<script>
+  const offers = {features: <%- JSON.stringify(page.data) %>};
+  const currentUsername = "<%- currentUser ? currentUser.username : undefined %>";
+
+  let selectedOffers = new Map();
+  const createAuctionSelector = document.getElementById("createAuctionBtn");
+
+  const checkSelectedOffers = () => {
+    let sector, type, customer, creators = {};
+
+    let checksOK = selectedOffers.size >= 2;
+    if (checksOK) {
+      for (let [offerId, offer] of selectedOffers) {
+        if (sector === undefined) {
+          sector = offer.referenceSector;
+          type = offer.referenceType;
+          customer = offer.costumer;
+        }
+
+        const currUsername = offer.author.username;
+        if (sector !== offer.referenceSector ||
+            type !== offer.referenceType ||
+            customer !== offer.costumer ||
+            creators[currUsername] !== undefined ||
+            offer.author.username === currentUsername) {
+          checksOK = false;
+          break;
+        }
+        creators[currUsername] = true;
+      }
+    }
+
+    if (checksOK) {
+      createAuctionSelector.disabled = false;
+    } else {
+      createAuctionSelector.disabled = true;
+    }
+  }
+
+  for (let offer of offers.features) {
+    const selector = document.getElementById(`offer-input-${offer.id}`);
+    selector.addEventListener('change', (e) => {
+      if (e.target.checked) {
+        // Added.
+        selectedOffers.set(offer.id, offer);
+      } else {
+        // Removed.
+        selectedOffers.delete(offer.id);
+      }
+      checkSelectedOffers();
+    })
+  }
+
+  // Prevent empty inputs from being part of request.
+  const form = document.getElementById("search-directory");
+  form.addEventListener("submit", () => {
+    const inputs = document.getElementsByTagName("select");
+
+    for (let input of inputs) {
+      if (input.name && !input.value) {
+        input.name = '';
+      }
+    }
+  })
+</script>

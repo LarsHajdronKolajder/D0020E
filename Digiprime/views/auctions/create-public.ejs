@@ -1,0 +1,114 @@
+<% layout('layouts/boilerplate') %>
+
+<h1 class="">
+  Create Public Auction
+  <span class="align-middle fs-4">
+    <span class="badge bg-primary"><%= auctionType %></span>
+    <span class="badge bg-primary"><%= offer.referenceSector %></span>
+    <span class="badge bg-primary"><%= offer.referenceType %></span>
+  </span>
+</h1>
+
+<% if (brokerAgreement) { %>
+<p class="text-muted mb-4">
+  In this auction you are representing
+  <a href="<%= baseUrl %>/profile/<%= brokerAgreement.represented %>"
+    ><%= brokerAgreement.represented %></a
+  >
+</p>
+<% } %>
+
+<form method="POST" action="<%= baseUrl %>/auctions/create-public" class="mb-5">
+  <!-- <input type="hidden" name="_csrf" value="" /> -->
+  <div class="d-flex gap-2">
+    <div class="flex-grow-1">
+      <div class="form-floating mb-3">
+        <input
+          type="text"
+          class="form-control"
+          id="auctionTitle"
+          name="auctionTitle"
+          placeholder="Auction Title"
+          required
+        />
+        <label for="auctionTitle">Auction Title</label>
+        <div id="auctionTitleHelpBlock" class="form-text px-1"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <div class="form-floating mb-3">
+        <input
+          type="datetime-local"
+          class="form-control"
+          id="closingTime"
+          name="closingTime"
+          placeholder="Closing Time"
+          required
+        />
+        <label for="closingTime">Closing Time</label>
+        <div id="closingTimeHelpBlock" class="form-text px-1">
+          Date and time when the auction closes for new bids
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="d-flex">
+        <div class="col-9 form-floating mb-3">
+          <input
+            type="text"
+            class="form-control"
+            id="quantity"
+            name="quantity"
+            placeholder="Quantity"
+            required
+          />
+          <label for="quantity">Quantity</label>
+        </div>
+
+        <div class="col-3 form-floating">
+          <select class="form-select" name="unit" id="unit" required>
+            <option value="ton">ton</option>
+            <option value="kg">kg</option>
+            <option value="pieces">pieces</option>
+            <option value="boxes">boxes</option>
+          </select>
+          <label for="unit">Unit</label>
+        </div>
+      </div>
+      <div id="quantityHelpBlock" class="form-text px-1"></div>
+    </div>
+  </div>
+
+  <div class="form form-text mb-3">
+    <label>Contract</label>
+    <%- include('../partials/contract-select-id', { contracts }) %>
+    <div id="contractHelpBlock" class="form-text px-1">
+      Contract for the auction
+    </div>
+  </div>
+
+  <div class="mb-3" id="map"></div>
+
+  <input
+    type="hidden"
+    id="offerId"
+    name="offerId"
+    value="<%= offer.id %>"
+    required
+  />
+
+  <div class="d-flex flex-row justify-content-end gap-2">
+    <button type="submit" class="btn btn-primary mb-5 px-4 py-2">
+      Create Auction
+    </button>
+  </div>
+</form>
+
+<script>
+  const mapToken = '<%-process.env.MAPBOX_TOKEN%>';
+  const offer = <%- JSON.stringify(offer) %>;
+</script>
+<script src="<%= baseUrl %>/javascripts/showPageMap.js"></script>

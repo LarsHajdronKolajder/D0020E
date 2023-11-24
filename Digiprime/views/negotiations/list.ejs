@@ -1,0 +1,82 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="container">
+  <div class="d-flex align-items-center justify-content-between">
+    <h2>Negotiations</h2>
+  </div>
+
+  <% if (currentUser && currentUser.role == "broker") { %>
+  <form
+    id="act-as"
+    action="<%= baseUrl %>/negotiations"
+    method="GET"
+    class="col-3"
+  >
+    <div class="filters input-group">
+      <select
+        class="form-select rounded-start border border-secondary"
+        id="user"
+        name="user"
+        aria-label=".form-select-sm example"
+        value="<%= page.query.user %>"
+      >
+        <option value=""><%= currentUser.username %></option>
+        <% for (let agreement of agreements) { if (page.query.user ===
+        agreement.represented) { %>
+        <option value="<%= agreement.represented %>" selected>
+          <%= agreement.represented %>
+        </option>
+        <% } else { %>
+        <option value="<%= agreement.represented %>">
+          <%= agreement.represented %>
+        </option>
+        <% }} %>
+      </select>
+      <button class="rounded-end search-btn btn btn-primary" type="submit">
+        View as
+      </button>
+    </div>
+  </form>
+  <% } %>
+
+  <div class="row mt-4 d-flex flex-column gap-4">
+    <% for (let negotiation of page.data.reverse()) { %>
+    <div class="d-flex flex-row gap-2">
+      <div class="d-flex flex-column">
+        <div class="d-flex flex-row gap-2 align-items-center">
+          <a
+            href="<%= baseUrl %>/negotiations/<%= negotiation._id %>"
+            class="h4 text-underline-hover"
+          >
+            <%= negotiation.name %>
+          </a>
+          <!-- -->
+          <% if (negotiation.created_by === currentUser.username) { %>
+          <span class="badge bg-primary fs-6 my-3">Created by me</span>
+          <% } %>
+
+          <!-- -->
+          <% if (negotiation.status === "accepted") { %>
+          <span class="badge bg-success fs-6 my-3">Accepted</span>
+          <% } %>
+
+          <!-- -->
+          <% if (negotiation.status === "rejected") { %>
+          <span class="badge bg-danger fs-6 my-3">Rejected</span>
+          <% } %>
+        </div>
+        <div class="">
+          <span class="text-muted">
+            <!-- prettier-ignore -->
+            created <%= formatDistanceToNow(new Date(negotiation.created_at)) %> ago
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <% } %>
+  </div>
+
+  <!-- prettier-ignore -->
+  <%- include('../partials/pagination', { page, path: "/negotiations" }) %>
+</div>

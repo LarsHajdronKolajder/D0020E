@@ -1,0 +1,65 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="container mt-3">
+  <h1>History</h1>
+
+  <!-- Search bar -->
+  <div class="row">
+    <div class="col-sm-6"></div>
+
+    <div class="col-sm-6">
+      <form id="search-box">
+        <div class="input-group mb-4">
+          <input
+            type="text"
+            class="search-by-name form-control"
+            id="searchBar"
+            name="name"
+            placeholder="Search Auction"
+            disabled
+          />
+          <button class="search-btn btn btn-primary" type="submit" disabled>
+            Search
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- History table -->
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Auction Title</th>
+        <th>Offer</th>
+        <th>End date</th>
+        <th>Winner</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <!-- One row per auction -->
+      <% for (let auction of page.data) { %>
+      <tr>
+        <td>
+          <a href="<%= baseUrl %>/auctions/<%= auction._id %>">
+            <%= auction.name %>
+          </a>
+        </td>
+        <td><%= auction.articleno %></td>
+        <td><%= displayDate(auction.closing_time) %></td>
+        <td><%= auction.highest_bidder %></td>
+      </tr>
+      <% } %>
+    </tbody>
+  </table>
+
+  <div class="card-body text-end">
+    <a class="card-link btn btn-primary col-1" href="<%= baseUrl %>/auctions/"
+      >Back</a
+    >
+  </div>
+
+  <!-- prettier-ignore -->
+  <%- include('../partials/pagination', { page, path: "/auctions/history" }) %>
+</div>

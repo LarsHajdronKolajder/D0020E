@@ -1,0 +1,84 @@
+<div class="input-group">
+  <% if (contracts.length === 0) { %>
+  <select
+    id="contract"
+    class="form-select"
+    aria-label="select with button addon"
+    name="contract"
+    value=""
+    disabled
+  >
+    <option value="">No contracts available</option>
+  </select>
+  <% } else { %>
+  <select
+    id="contract"
+    class="form-select"
+    aria-label="select with button addon"
+    name="contract"
+    value=""
+    required
+  >
+    <% for (let contract of contracts) { %>
+    <option value="<%= contract.title %>"><%= contract.title %></option>
+    <% } %>
+  </select>
+  <button
+    class="btn btn-outline-secondary"
+    id="contractButton"
+    type="button"
+    data-bs-toggle="modal"
+    data-bs-target="#contractModal"
+  >
+    View
+  </button>
+  <% } %>
+</div>
+
+<div
+  class="modal fade"
+  id="contractModal"
+  tabindex="-1"
+  aria-labelledby="contractModalTitle"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="contractModalTitle">Contract</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body" id="contractModalContents"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const contracts = <%- JSON.stringify(contracts) %>;
+  const contractLookup = {};
+  for (let contract of contracts) {
+    contractLookup[contract.title] = contract;
+  }
+
+  const contractSelect = document.getElementById("contract");
+  const contractModalTitle = document.getElementById("contractModalTitle");
+  const contractModalContents = document.getElementById("contractModalContents");
+
+  function showContract() {
+    const id = contractSelect.value;
+    const c = contractLookup[id];
+    contractModalTitle.innerHTML = "Contract " + c.title;
+    contractModalContents.innerHTML = c.body;
+  }
+  document.getElementById("contractButton").onclick = showContract;
+</script>

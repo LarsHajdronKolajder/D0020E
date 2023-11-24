@@ -1,0 +1,135 @@
+<% layout('layouts/boilerplate') %>
+
+<!-- https://getbootstrap.com/docs/5.0/examples/sidebars/ -->
+<div class="row card d-flex flex-row">
+  <div class="col-3 d-flex flex-column flex-shrink-0 p-3 bg-light">
+    <p
+      class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none"
+    >
+      <span class="fs-4">Messages</span>
+    </p>
+    <hr />
+    <ul class="nav nav-pills flex-column mb-auto">
+      <% for (const f of filters) { %>
+        <li class="nav-item">
+          <% if (f.filter == filter) { %>
+            <a
+              href="<%= baseUrl %>/messages<%= f.query %>"
+              class="nav-link active"
+              aria-current="page"
+            >
+              <%= f.name %>
+            </a>
+          <% } else { %>
+            <a href="<%= baseUrl %>/messages<%= f.query %>" class="nav-link link-dark">
+              <%= f.name %>
+            </a>
+          <% } %>
+        </li>
+      <% } %>
+    </ul>
+  </div>
+
+  <div
+    class="col-9 d-flex flex-column align-items-stretch flex-shrink-0 bg-white"
+  >
+    <p
+      class="d-flex align-items-center flex-shrink-0 p-3 link-dark text-decoration-none border-bottom"
+      style="margin-bottom: 0px"
+    >
+      <span class="fs-5 fw-semibold">Messages</span>
+    </p>
+    <div class="list-group list-group-flush border-bottom scrollarea">
+      <%
+        for (const message of page.data) {
+          const [d,t] = displayDate(message.createdAt).split(" ")
+          let body = message.body.trim();
+          if (body.length > 80) {
+            body = body.substring(0, 77).trim() + "...";
+          }
+          let seen_class = "";
+          if ((message.to._id == currentUser._id && message.seen) || message.from._id == currentUser._id) {
+            seen_class = "bg-light";
+          }
+        %>
+      <a
+        href="<%= baseUrl %>/messages/<%= message._id%>"
+        class="list-group-item list-group-item-action py-3 lh-tight <%= seen_class %>"
+      >
+        <div class="d-flex w-100 align-items-center justify-content-between">
+          <div class="d-flex flex-row align-items-center">
+            <strong class=""><%= message.title %></strong> <small class="text-muted mx-2"><%= message.from.username %></small>
+            <% if (message.to._id == currentUser._id) { %>
+            <form
+              method="POST"
+              action="<%= baseUrl %>/messages/<%= message._id %>/mark"
+            >
+              <% if (message.marked) { %>
+              <button
+                type="submit"
+                class="btn btn-outline-danger"
+                style="
+                  border-radius: 9999px;
+                  padding: 2px 8px 4px 8px;
+                  margin: 0;
+                  border: none;
+                  margin-left: 8px;
+                "
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  class="bi bi-bookmark-check"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M10.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0z"
+                  />
+                  <path
+                    d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z"
+                  />
+                </svg>
+              </button>
+              <% } else { %>
+              <button
+                type="submit"
+                class="btn btn-outline-primary"
+                style="
+                  border-radius: 9999px;
+                  padding: 2px 8px 4px 8px;
+                  margin: 0;
+                  border: none;
+                  margin-left: 8px;
+                "
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  class="bi bi-bookmark"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z"
+                  />
+                </svg>
+              </button>
+              <% } %>
+            </form>
+            <% } %>
+          </div>
+          <small><%= d %> <%= t %></small>
+        </div>
+        <div class="col-10 mb-1 small"><%= body %></div>
+      </a>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<!-- prettier-ignore -->
+<%- include('../partials/pagination', { page, path: "/messages" }) %>

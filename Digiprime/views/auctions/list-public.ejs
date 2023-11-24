@@ -1,0 +1,69 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h1>Public auctions</h1>
+    </div>
+
+    <div class="col-6"></div>
+
+    <div class="col align-self-center">
+      <form id="search-box">
+        <div class="input-group mb-4">
+          <input
+            type="text"
+            class="search-by-name form-control"
+            id="searchBar"
+            name="name"
+            placeholder="Search Auction"
+            disabled
+          />
+          <button class="search-btn btn btn-primary" type="submit" disabled>
+            Search
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<table class="table table-hover mt-5">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Auction name</th>
+      <th scope="col">Action type</th>
+      <th scope="col">Reference type</th>
+      <th scope="col">Reference sector</th>
+      <th scope="col">Quantity</th>
+      <th scope="col">Closing Time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% for (let auction of page.data) { %>
+    <tr>
+      <th scope="row"></th>
+      <td>
+        <a href="<%= baseUrl %>/auctions/<%= auction._id %>"
+          ><%= auction.name %></a
+        >
+      </td>
+      <td><%= auction.auction_type %></td>
+      <td><%= auction.reference_type %></td>
+      <td><%= auction.reference_sector %></td>
+      <td><%= auction.quantity %></td>
+      <td><%= displayDate(auction.closing_time) %></td>
+    </tr>
+    <% } %>
+  </tbody>
+</table>
+
+<div class="card-body text-end">
+  <a class="card-link btn btn-primary col-1" href="<%= baseUrl %>/auctions/"
+    >Back</a
+  >
+</div>
+
+<!-- prettier-ignore -->
+<%- include('../partials/pagination', { page, path: "/auctions/public" }) %>

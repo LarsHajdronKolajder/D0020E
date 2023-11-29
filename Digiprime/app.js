@@ -116,7 +116,11 @@ const connectSrcUrls = [
   "https://b.tiles.mapbox.com/",
   "https://events.mapbox.com/",
   "https://automotive.digiprime-mvp.red.extrasys.it/orc/data/edm",
-  "https://automotive.digiprime-mvp.red.extrasys.it"
+  "https://automotive.digiprime-mvp.red.extrasys.it",
+  "http://localhost:105/",    //docker API URL
+  "http://localhost:105",    //docker API URL
+  "http://127.0.0.1:5000/",        //local test API URL
+  "http://172.17.0.2:105/"
 ];
 
 let imgSrcUrls = [

@@ -48,7 +48,7 @@
           <option value="mancode">Automotive</option>
         </select>
 <!-- Added code -->
-          <th scope="col"><a class="btn btn-primary customActionButton" style="float:right;" role="button">Fetch data</a></th>
+          <th scope="col"><a class="btn btn-primary customActionButton" style="float:right;" role="button">Hämta data</a></th>
           <!-- <button id="customActionButton" type="button" class="btn btn-primary">Retrieve Data</button> --->
         </div>
       </div>
@@ -176,8 +176,68 @@
         <div class="valid-feedback">Looks good!</div>
       </div>
 
+      <!--    API    -->
       <div class="mb-3">
-        <label for="image" class="form-label">Multiple image input</label>
+        <label class="form-label" for="api_code">Testa API</label>
+        <div class="input-group mb-3">
+          <input
+            type="text"
+            class="form-control"
+            id="api_code"
+            placeholder="API URI"
+            aria-label="api_code"
+            aria-describedby="api_code-label"
+            optional
+          />
+          <th scope="col"><a class="btn btn-primary apiButton" style="float:right;" role="button">Hämta API</a></th>
+      </div>
+      <label class="form-label" for="api_creation">Date of Creation</label>
+      <div class="input-group mb-3">
+        <input
+          class="form-control"
+          type="text"
+          id="api_creation"
+          name="offer[creation]"
+          placeholder="Year"
+          required
+        />
+      </div>
+      <label class="form-label" for="api_batteryId">Battery ID</label>
+      <div class="input-group mb-3">
+        <input
+          class="form-control"
+          type="text"
+          id="api_id"
+          name="offer[batteryId]"
+          placeholder="Battery ID"
+          required
+        />
+      </div>
+      <label class="form-label" for="api_id">Number of refurbs</label>
+      <div class="input-group mb-3">
+        <input
+          class="form-control"
+          type="text"
+          id="api_id"
+          name="offer[numRefurb]"
+          placeholder="Number of refurbs"
+          required
+        />
+      </div>
+      <label class="form-label" for="api_id">Refurb date</label>
+      <div class="input-group mb-3">
+        <input
+          class="form-control"
+          type="text"
+          id="api_id"
+          name="offer[refurbDate]"
+          placeholder="Refurbish Date (YY-MM-DD)"
+          required
+        />
+      </div>
+      <!--    API    -->
+      <label for="image" class="form-label">Multiple image input</label>
+      <div class="mb-3">
         <input
           class="form-control"
           type="file"
@@ -202,6 +262,8 @@
     <footer></footer>
   </div>
 </div>
+
+<script src="<%= baseUrl %>/javascripts/apiButton.js"></script>
 <script src="<%= baseUrl %>/javascripts/customAction.js"></script>
 <script src="<%= baseUrl %>/javascripts/formController.js"></script>
 <script src="<%= baseUrl %>/javascripts/referenceFillers.js"></script>

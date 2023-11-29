@@ -15,6 +15,15 @@ RUN         apt-get update
 RUN         apt-get install -y mongodb-org
 RUN         mkdir -p /data/db
 
+# 3. Ledger dependencies
+# -----------------------------------------------------------------------------
+WORKDIR     /ledger
+RUN         apt-get update
+RUN         apt-get install -y python3 python3-pip
+ARG         requirements="./Ledger/requirements.txt"
+COPY        ${requirements} .
+RUN         pip3 install -r requirements.txt
+
 # 4. Negotiation Engine dependencies
 # -----------------------------------------------------------------------------
 WORKDIR     /ne
@@ -47,6 +56,12 @@ WORKDIR     /digiprime
 COPY        ./Digiprime .
 EXPOSE      3000
 
+# 8. Ledger source
+# -----------------------------------------------------------------------------
+WORKDIR     /ledger
+COPY        ./Ledger .
+EXPOSE      105
+
 # 10. Setting up required environment variables.
 # -----------------------------------------------------------------------------
 # General
@@ -71,6 +86,9 @@ ENV         BATTERY_URL='https://battery.digiprime-mvp.red.extrasys.it/orc/data/
 
 # Negotiation Engine
 ENV         DATABASE_URL="mongodb://localhost:27017/"
+
+# Ledger Engine
+ENV         LEDGER_URL=""
 
 # 11. Copy & Run start script
 # -----------------------------------------------------------------------------

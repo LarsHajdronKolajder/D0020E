@@ -49,9 +49,9 @@
         <li class="list-group-item text-muted"><%= offer.location %></li>
         <li class="list-group-item">
           Submitted by
-          <a href="<%= baseUrl %>/profile/<%= offer.author.username %>"
-            ><%= offer.author.username %></a
-          >
+          <a href="<%= baseUrl %>/profile/<%= offer.author.username %>">
+            <%= offer.author.username %>
+          </a>
         </li>
       </ul>
 
@@ -89,6 +89,14 @@
       role="button"
       >Direct Negotiation</a
     >
+    <th scope="col">
+      <a
+        class="btn btn-primary historyButton"
+        style="float: right"
+        role="button"
+        >Get History</a
+      >
+    </th>
   </div>
   <div class="col-6">
     <div class="mb-3" id="map"></div>

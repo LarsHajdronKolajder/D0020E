@@ -8,6 +8,7 @@ The project revolves around a Demand-Supply Matching service.
 ## Group members
 Ludvig Järvi  
 [Anton Follinger](https://github.com/Hundmat)
+
 Daniel Hammar  
 Martin Höglund
 

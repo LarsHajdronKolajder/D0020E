@@ -23,13 +23,14 @@ class User:
             "role": request.form.get('role')
         }
 
-        #user['password'] = pbkdf2_sha256.encrypt(user['password'])
+        user['password'] = pbkdf2_sha256.encrypt(user['password'])
 
         if col_users.find_one({"username": user['username']}):
             return jsonify({"error": "Username already exists"}), 400
 
         if col_users.insert_one(user):
-            return self.start_session(user)
+            return jsonify({"success": "Signup"}), 200
+        #self.start_session(user)
 
         return jsonify({"error": "Signup failed"}), 400
     

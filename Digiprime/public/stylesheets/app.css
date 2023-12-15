@@ -7,3 +7,8 @@
     width: 100%;
     height: 300px;
 }
+
+body {
+    background-color: rgb(24, 24, 24);
+    color: white;
+}

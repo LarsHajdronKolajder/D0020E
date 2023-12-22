@@ -1,4 +1,5 @@
 from flask import Flask, jsonify, request, session, redirect
+from flask_session import Session
 from users import col_users
 from passlib.hash import pbkdf2_sha256
 import uuid
@@ -29,8 +30,8 @@ class User:
             return jsonify({"error": "Username already exists"}), 400
 
         if col_users.insert_one(user):
-            return jsonify({"success": "Signup"}), 200
-        #self.start_session(user)
+            self.start_session(user)
+            return jsonify({"signup": "Success"}), 200
 
         return jsonify({"error": "Signup failed"}), 400
     

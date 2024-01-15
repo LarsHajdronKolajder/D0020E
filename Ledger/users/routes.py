@@ -13,3 +13,7 @@ def login():
 @app.route('/user/logout')
 def logout():
     return User().logout()
+
+@app.route('/hello')
+def hello():
+    return "hello"

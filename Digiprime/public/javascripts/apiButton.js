@@ -7,6 +7,7 @@ const apiUrl = "http://localhost:105";
 
 apiButton.addEventListener('click', function() {
     const apiCodeValue = apiCodeInput.value;
+    
     //const apiEvent = apiEventInput.value;
     //const apiID = apiIDInput.value;
 

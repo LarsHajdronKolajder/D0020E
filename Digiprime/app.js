@@ -119,8 +119,9 @@ const connectSrcUrls = [
   "https://automotive.digiprime-mvp.red.extrasys.it",
   "http://localhost:105/",    //docker API URL
   "http://localhost:105",    //docker API URL
-  "http://127.0.0.1:5000/",        //local test API URL
-  "http://172.17.0.2:105/"
+  "http://localhost:107",
+  "http://localhost:107/",
+  "http://localhost:107/user/login"
 ];
 
 let imgSrcUrls = [

@@ -13,6 +13,7 @@ nohup python3 app.py &
 echo "Starting Ledger..."
 cd /ledger
 nohup python3 app.py &
+nohup python3 login.py &
 
 # Start Digiprime
 echo "Starting Digiprime..."

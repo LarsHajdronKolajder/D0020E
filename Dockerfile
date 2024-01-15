@@ -61,6 +61,7 @@ EXPOSE      3000
 WORKDIR     /ledger
 COPY        ./Ledger .
 EXPOSE      105
+EXPOSE      107
 
 # 10. Setting up required environment variables.
 # -----------------------------------------------------------------------------

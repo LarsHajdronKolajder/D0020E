@@ -31,8 +31,8 @@ apiButton.addEventListener('click', function() {
       fetch(`${apiUrl}/${apiCodeValue}`, {
         method: 'POST',
         body: JSON.stringify({
-          event: "digiprime",
-          id: "test"
+          event: "thisistest",
+          id: "test123"
         })
       })
       .catch(error => {

@@ -1,7 +1,7 @@
 from flask import Flask
 from pymongo import MongoClient
 from pymongo.server_api import ServerApi
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 
 #import os
 #connection_string =  os.environ.get('LEDGER_URL')
@@ -10,7 +10,7 @@ connection_string = "mongodb+srv://LedgerSuperSecretUsername97187:Jdl7WM2E23aAxS
 cluster = MongoClient(connection_string, server_api = ServerApi('1'))
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, supports_credentials=True)
 
 print("init run...")
 

@@ -17,12 +17,13 @@ class User:
     def signup(self):
         print(request.form)
 
-        userData = request.get_json()
+        uname = request.json['username']
+        pword = request.json['password']
 
         user = {
             "_id": uuid.uuid4().hex,
-            "username": userData.get('username'),
-            "password": userData.get('password'),
+            "username": uname,
+            "password": pword,
             "role": 'dev'
         }
 
@@ -45,13 +46,14 @@ class User:
 
     def login(self):
 
-        userData = request.get_json()
+        uname = request.json['username']
+        pword = request.json['password']
 
         user = col_users.find_one({
-            "username": userData.get('username')
+            "username": uname
         })
 
-        if user and pbkdf2_sha256.verify(userData.get('password'), user['password']):
+        if user and pbkdf2_sha256.verify(pword, user['password']):
             return self.start_session(user)
 
         return jsonify({"error": "invalid login credentials"}), 401

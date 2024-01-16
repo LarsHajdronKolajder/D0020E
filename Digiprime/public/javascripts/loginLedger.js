@@ -8,27 +8,40 @@ ledgerButton.addEventListener('click', function() {
 });
 
 function ledgerPrompt() {
-    let input = prompt("Enter your username and password below", "username:password");
+    let input = prompt("Enter your username and password below", "command:username:password");
 
-    input = input.split(":");
+    split_input = input.split(":");
 
-    const username = input[0];
-    const password = input[1]; 
+    command = split_input[0];
+    uname = split_input[1];
+    pword = split_input[2];
     
-    if (username == null || username == "" || password == null || password == "") {
+    if (uname == null || uname == "" || pword == null || pword == "") {
       alert("invalid input");
     }
 
-    fetch(`${ledger_user_url}/user/login`, {
-        method: 'POST',
-        body: JSON.stringify({
-          username: `${username}`,
-          password: `${password}`
-        })
-    })
-    .catch(error => {
-        console.log("Fetch error! (test)");
-    });
-
+    if (command == "hello"){
+      fetch(`${ledger_user_url}/${command}`, {method: 'GET'})
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        alert(JSON.stringify(data.message));
+      })
+      .catch(error => {
+        console.log("Fetch error! (hello)");
+      });
+    } else {
+      fetch(`${ledger_user_url}/user/${command}`, 
+      {
+          method: 'POST',
+          body: JSON.stringify({
+            username: uname,
+            password: pword
+          })
+      })
+      .catch(error => {
+          console.log("Fetch error! (shitdontwork)", error);
+      });
+    }
 }
 

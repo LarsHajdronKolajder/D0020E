@@ -12,7 +12,7 @@ from bson.json_util import dumps
 import os
 
 app = Flask(__name__)
-CORS(app, resources={r"/": {"origins": ""}})
+CORS(app)
 
 os.environ.get('LEDGER_URL')
 

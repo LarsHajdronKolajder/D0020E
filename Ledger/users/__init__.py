@@ -10,7 +10,9 @@ connection_string = "mongodb+srv://LedgerSuperSecretUsername97187:Jdl7WM2E23aAxS
 cluster = MongoClient(connection_string, server_api = ServerApi('1'))
 
 app = Flask(__name__)
-CORS(app, resources={r"/": {"origins": ""}})
+CORS(app)
+
+print("init run...")
 
 # Session configs 
 app.config["SESSION_PERMANENT"] = False

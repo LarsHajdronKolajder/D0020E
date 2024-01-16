@@ -1,12 +1,12 @@
-from flask import Flask
+from flask import Flask, jsonify
 from users import app
 from users.models import User
 
-@app.route('/user/signup', methods=['POST', 'GET'])
+@app.route('/user/signup', methods=['POST'])
 def signup():
     return User().signup()
 
-@app.route('/user/login', methods=['POST', 'GET'])
+@app.route('/user/login', methods=['POST'])
 def login():
     return User().login()
 
@@ -16,4 +16,5 @@ def logout():
 
 @app.route('/hello')
 def hello():
-    return "hello"
+    response_data = {'message': 'Hello World'}
+    return jsonify(response_data)

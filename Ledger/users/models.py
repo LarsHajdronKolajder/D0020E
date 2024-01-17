@@ -1,9 +1,17 @@
 from flask import Flask, jsonify, request, session, redirect
 from flask_session import Session
-from users import col_users
 from passlib.hash import pbkdf2_sha256
 import uuid
+from pymongo import MongoClient
+from pymongo.server_api import ServerApi
 
+# MongoDB
+connection_string = "mongodb+srv://LedgerSuperSecretUsername97187:Jdl7WM2E23aAxSPN@ledgerhistorydb.aeueeyi.mongodb.net/" #os.environ.get('LEDGER_URL')
+cluster = MongoClient(connection_string, server_api = ServerApi('1'))
+db_users = cluster['Users']  # Database ID
+col_users = db_users.ID      # Collection ID
+
+# User class for route functions
 class User:
 
     def start_session(self, user):

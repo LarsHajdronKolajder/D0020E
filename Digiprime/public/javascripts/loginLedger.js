@@ -33,11 +33,16 @@ function ledgerPrompt() {
     } else {
       fetch(`${ledger_user_url}/user/${command}`, 
       {
-          method: 'POST',
-          body: JSON.stringify({
-            username: uname,
-            password: pword
-          })
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+          'Content-type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          username: uname,
+          password: pword
+        })
       })
       .catch(error => {
           console.log("Fetch error! (shitdontwork)", error);

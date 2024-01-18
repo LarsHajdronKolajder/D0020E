@@ -23,7 +23,6 @@ class User:
         return jsonify(user), 200
     
     def signup(self):
-        print(request.form)
 
         uname = request.json['username']
         pword = request.json['password']
@@ -49,8 +48,8 @@ class User:
     def logout(self):
         
         session.clear()
-        
-        return redirect('/')
+
+        return jsonify({"logout": "success"}), 200
 
     def login(self):
 

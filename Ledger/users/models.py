@@ -1,5 +1,4 @@
-from flask import Flask, jsonify, request, session, redirect
-from flask_session import Session
+from flask import Flask, jsonify, request
 from passlib.hash import pbkdf2_sha256
 import uuid
 from pymongo import MongoClient
@@ -14,14 +13,6 @@ col_users = db_users.ID      # Collection ID
 # User class for route functions
 class User:
 
-    def start_session(self, user):
-
-        del user['password']
-        session['logged_in'] = True
-        session['user'] = user
-
-        return jsonify(user), 200
-    
     def signup(self):
 
         uname = request.json['username']
@@ -36,31 +27,28 @@ class User:
 
         user['password'] = pbkdf2_sha256.encrypt(user['password'])
 
+        # Check if username already exists
         if col_users.find_one({"username": user['username']}):
             return jsonify({"error": "Username already exists"}), 400
 
+        # If username does not exist
         if col_users.insert_one(user):
-            self.start_session(user)
             return jsonify({"signup": "Success"}), 200
 
         return jsonify({"error": "Signup failed"}), 400
-    
-    def logout(self):
-        
-        session.clear()
-
-        return jsonify({"logout": "success"}), 200
 
     def login(self):
 
         uname = request.json['username']
         pword = request.json['password']
 
+        # Find user from requested username
         user = col_users.find_one({
             "username": uname
         })
 
+        # Verify user
         if user and pbkdf2_sha256.verify(pword, user['password']):
-            return self.start_session(user)
-
+            return jsonify({"login": "Success"}), 200
+        
         return jsonify({"error": "invalid login credentials"}), 401

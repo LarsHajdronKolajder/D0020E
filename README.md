@@ -6,11 +6,10 @@ This is part of a [project course](https://www.ltu.se/edu/course/D00/D0020E/D002
 The project revolves around a Demand-Supply Matching service.
 
 ## Group members
-Ludvig Järvi  
-[Anton Follinger](https://github.com/Hundmat)
-
-Daniel Hammar  
-Martin Höglund
+[Ludvig Järvi](https://github.com/Jaevii)  
+[Anton Follinger](https://github.com/Hundmat)   
+[Daniel Hammar](https://github.com/DanielHammar)   
+[Martin Höglund](https://github.com/LarsHajdronKolajder)  
 
 ## Git-Workflow
 

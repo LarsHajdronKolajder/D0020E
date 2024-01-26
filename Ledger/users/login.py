@@ -14,6 +14,11 @@ def home():
     response_data = {'default': 'page'}
     return jsonify(response_data)
 
+@app.route('/hello')
+def query():
+    response_data = {'message': 'Hello World'}
+    return jsonify(response_data)
+
 @app.route('/ledger/signup', methods=['GET', 'POST'])
 def signup():
     return User().signup()
@@ -21,6 +26,10 @@ def signup():
 @app.route('/ledger/login', methods=['GET', 'POST'])
 def login():
     return User().login()
+
+@app.route('/ledger/role', methods=['GET', 'POST'])
+def role():
+    return User().role()
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=107)

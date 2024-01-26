@@ -38,17 +38,20 @@ class User:
         return jsonify({"error": "Signup failed"}), 400
 
     def login(self):
-
+        # Extract username and password from the request's JSON body
         uname = request.json['username']
         pword = request.json['password']
 
-        # Find user from requested username
+        # Query the 'col_users' collection for a user with the provided username
         user = col_users.find_one({
             "username": uname
         })
 
-        # Verify user
-        if user and pbkdf2_sha256.verify(pword, user['password']):
-            return jsonify({"login": "Success"}), 200
-        
+        # If a user is found and the provided password matches the user's password
+        # and the user's role is 'sel', return a success response
+        if user and pbkdf2_sha256.verify(pword, user['password']) and user['role'] == 'sel':
+           return jsonify({"login": "Success"}), 200
+
+        # If no user is found, or the password doesn't match, or the user's role is not 'sel',
+        # return an error response
         return jsonify({"error": "invalid login credentials"}), 401

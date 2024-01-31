@@ -1,12 +1,10 @@
 const apiButton = document.querySelector('.apiButton');
 const apiCodeInput = document.getElementById('api_code');
-//const apiEventInput = document.getElementById('api_event');
-//const apiIDInput = document.getElementById('api_id');
 
 const apiUrl = "http://localhost:105";
 const ledger_user_url = "http://localhost:107";
+
 apiButton.addEventListener('click', function() {
-  
   handleApiButtonClick();
 });
 
@@ -19,12 +17,12 @@ apiButton.addEventListener('click', function() {
  * If the user is not logged in or doesn't have the right access, it displays an alert message.
  */
 async function handleApiButtonClick() {
+
   const apiCodeValue = apiCodeInput.value;  
-    
-  //const apiEvent = apiEventInput.value;
-  //const apiID = apiIDInput.value;
+
   tmp_loginCheck = await loginCheck();
   console.log(tmp_loginCheck);
+
   if (tmp_loginCheck != null) {
 
     if (parseInt(apiCodeValue)) {
@@ -72,7 +70,7 @@ async function handleApiButtonClick() {
     alert("Test with a new account");
     return;
   }
-}
+};
   
 
 
@@ -91,7 +89,7 @@ async function loginCheck() {
   
   // Check if the username or password is null or empty, and alert the user if so
   if (uname == null || uname == "" || pword == null || pword == "") {
-    alert("invalid input");
+    throw new Error('Invalid input!');
   }
 
   // Try to make a POST request to the login endpoint

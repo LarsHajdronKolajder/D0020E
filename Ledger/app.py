@@ -12,11 +12,14 @@ from bson.json_util import dumps
 import os
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "*"}})
 
-os.environ.get('LEDGER_URL')
+#os.environ.get('LEDGER_URL')
 
-connection_string =  os.environ.get('LEDGER_URL')
+#connection_string =  os.environ.get('LEDGER_URL')
+
+connection_string = "mongodb+srv://LedgerSuperSecretUsername97187:Jdl7WM2E23aAxSPN@ledgerhistorydb.aeueeyi.mongodb.net/" #os.environ.get('LEDGER_URL')
+
 
 cluster = MongoClient(connection_string, server_api = ServerApi('1'))
 
@@ -28,141 +31,46 @@ db_link = cluster['LinkedTest']
 col_link = db_link.LinkedList #LinkedList example
 
 
-@app.route("/get", methods=['GET'])
+@app.route("/get", methods=['POST'])
 def get_sig():
-    signatures = col.find()
+    BatteryID = request.json['BatteryID']
+    signatures = col.find("BatteryID" == BatteryID)
     sig_list = []
     for item in signatures:
         sig_dict = {
             "_id": str(item['_id']),
-            "event": item.get('Event', ''),
-            "id": item.get('id', ''),
-            "date": item.get('date', ''),
-            "sig": item.get('sig', ''),
-            "payload": item.get('payload', '')
+            "CID": item.get('CID', ''),
+            "CurOwner": item.get('CurOwner', ''),
+            "BatteryID": item.get('BatteryID', ''),
         }
         sig_list.append(sig_dict)
 
     return jsonify(sig_list)
 
-@app.route("/getLink", methods=["GET"])
-def get_link():
-    signatures = col_link.find()
-    sig_list = []
-    for item in signatures:
-        sig_dict = {
-            "_id": str(item['_id']),
-            "batteryId": item.get('batteryId', ''),
-            "child": item.get('child', '')
-        }
-    sig_list.append(sig_dict)
-    return jsonify(sig_list)
 
+# This route handles the "/find" endpoint and expects a POST request
+@app.route("/find", methods=['POST'])
+def get_data_from_database():
+    print(request.json)  # Print the JSON data received in the request
+    JsonBattery = request.json['BatteryID']  # Extract the value of "BatteryID" from the JSON data
+    print(JsonBattery)  # Print the extracted "BatteryID"
+    JsonCurOwner = request.json['CurOwner']  # Extract the value of "CurOwner" from the JSON data
 
-@app.route("/link2", methods=["POST"])
-def test2():
-    col_link.insert_one({"batteryId": 2, "child":None})
-    return "/link2 added"
+    # Find a document in the collection where "BatteryID" matches the extracted "JsonBattery"
+    BatteryID = col.find_one({
+        "BatteryID": JsonBattery
+    })
 
-
-@app.route('/hello', methods=['GET'])
-def query():
-    response_data = {'message': 'Hello World'}
-    return jsonify(response_data)
-
-@app.route("/test", methods=['POST'])
-def testAPI():
-    col.insert_one({'test_digiprime_martin': 'successful'})
-    return "/test success"
-
-@app.route("/add", methods=['POST']) # Fixa så att man kan skicka från form input
-def startpy():
-    event = request.json['event']
-    id = request.json['id']
-    ledger_dict = {
-        "event": event,
-        "id": id
-    }
-    col.insert_one(ledger_dict)
-    return "/add success"
-
-
-
-@app.route("/find/<string:api_code>", methods=['GET'])
-def get_data_from_database(api_code):
-    signature = col.find_one({"id": api_code})
-    print(signature)
-
-    if signature:
-        sig_dict = {
-            "id": signature['id'],
-            "date": signature['date'],
-            "sig": signature['sig'],
-            "payload": signature['payload']
-        }
-        return jsonify(sig_dict)
+    # Check if the "CurOwner" in the found document matches the extracted "JsonCurOwner"
+    if BatteryID["CurOwner"] == JsonCurOwner:
+        return jsonify({"respone": "Correct Owner"}), 200  # Return a JSON response with "Correct Owner" message and 200 status code
     else:
-        return jsonify({"error": "Signature not found"}), 404
+        return jsonify({"error": "Signature not found"}), 404  # Return a JSON response with "Signature not found" error and 404 status code
+
     
     
     
-@app.route("/link", methods=["POST"])
-def link_batteries():
-    try:
-        data = request.json
-        batteryId = data.get('batteryId')
 
-        existing_parent = col_link.find_one({"batteryId": batteryId})
-
-        if existing_parent: # if found we find the last child of that entry 
-            last_child = find_last(existing_parent)
-            child_document = {
-                "batteryId": batteryId,
-                "child": None,
-                "parent": last_child["_id"]
-            }
-            ##
-            col_link.insert_one(child_document)
-            ## Update the lastchild with the new info  
-            col_link.update_one({"_id": last_child["_id"]}, {"$set": {"child": child_document["_id"]}})
-        else:  # First entry of the batteryId
-            parent_document = {
-                "batteryId": batteryId,
-                "child": None,
-                "parent": None
-            }
-            col_link.insert_one(parent_document).inserted_id
-
-        return jsonify({"message": "Link added successfully"})
-
-    except DuplicateKeyError:
-        return jsonify({"error": "Duplicate link"}), 400
-    
-@app.route("/getLink/<string:batteryId>", methods=["GET"])
-def get_linked_batteries(batteryId):
-    result = col_link.aggregate([
-        {
-            "$match": {"batteryId": batteryId}
-        },
-        {
-            "$graphLookup": {
-                "from": "LinkedList",
-                "startWith": "$child",
-                "connectFromField": "child",
-                "connectToField": "batteryId",
-                "as": "linkedBatteries"
-            }
-        }
-    ])
-    return jsonify(result)
-
-def find_last(existing_parent):
-    if not existing_parent.get('child'):
-        return existing_parent
-    else:
-        child_id = existing_parent['child']
-        last_child = col_link.find_one({"_id": child_id})
-        return find_last(last_child)
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=105)

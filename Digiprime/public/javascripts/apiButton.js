@@ -10,6 +10,14 @@ apiButton.addEventListener('click', function() {
   handleApiButtonClick();
 });
 
+/**
+ * Handles the click event of the API button.
+ * Retrieves the value of the API code input field and performs an API request based on the code value.
+ * If the user is logged in and has the right access, it sends a POST request to the API endpoint.
+ * If the API code value is a valid integer, it sends a request to find the battery with the specified code.
+ * If the response is not successful, it throws an error.
+ * If the user is not logged in or doesn't have the right access, it displays an alert message.
+ */
 async function handleApiButtonClick() {
   const apiCodeValue = apiCodeInput.value;  
     
@@ -18,51 +26,48 @@ async function handleApiButtonClick() {
   tmp_loginCheck = await loginCheck();
   console.log(tmp_loginCheck);
   if (tmp_loginCheck != null) {
-    
-    if (apiCodeValue == "hello"){
-      fetch(`${apiUrl}/${apiCodeValue}`, {method: 'GET'})
-      .then(response => response.json())
-      .then(data => {
-        console.log(data);
-        alert(JSON.stringify(data.message));
-      })
-      .catch(error => {
-        console.log("Fetch error! (hello)");
-      });
-    } else if (apiCodeValue == "test"){
-      fetch(`${apiUrl}/${apiCodeValue}`, {method: 'POST'})
-      .catch(error => {
-        console.log("Fetch error! (test)");
-      });
-    } else if(apiCodeValue == "add"){ // Fixa så att man kan skicka från form input
-      fetch(`${apiUrl}/${apiCodeValue}`, {
-        method: 'POST',
-        body: JSON.stringify({
-          event: "thisistest",
-          id: "test123"
-        })
-      })
-      .catch(error => {
-        console.log("Fetch error! (test)");
-      });
-    } else if (parseInt(apiCodeValue)) {
-      const parsedApiCodeValue = parseInt(apiCodeValue);
 
+    if (parseInt(apiCodeValue)) {
+
+      const parsedApiCodeValue = parseInt(apiCodeValue);
+      
       if (!isNaN(parsedApiCodeValue)) {
         console.log(parsedApiCodeValue)
-          fetch(`${apiUrl}/find/${apiCodeValue}`)
-              .then(response => response.json())
-              .then(data => {
-                  const apiCreationInput = document.getElementById('api_creation');
-                  apiCreationInput.value = data.date;
-              })
-              .catch(error => {
-                  console.log("Fetch error! (find)");
-              });
+        try{
+          const response = await fetch((`${apiUrl}/find`),{
+            method: 'POST', // Specify the method as POST
+            mode: 'cors', // Enable CORS
+            headers: {
+              'Content-Type': 'application/json', // Set the content type of the request body
+              'Accept': 'application/json' // Set the acceptable response content type
+            },
+            body: JSON.stringify({ CurOwner: tmp_loginCheck, BatteryID: apiCodeValue })
+          })
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+        }catch (error) {
+          // Log the error to the console
+          console.log(error)
+          alert("Not the current Owner")
+          return
+          // Set uname to null
+        }
       } else {
           console.log("Not an integer");
+          return;
       }
     }
+    alert("You are logged in and have the right access to change this battery Ledger")
+
+
+
+
+
+
+
+
+
   }else {
     alert("Test with a new account");
     return;

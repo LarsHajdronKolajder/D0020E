@@ -1,40 +1,23 @@
 const apiButton = document.querySelector('.apiButton');
 const apiCodeInput = document.getElementById('api_code');
-//const apiEventInput = document.getElementById('api_event');
-//const apiIDInput = document.getElementById('api_id');
 
 const apiUrl = "http://localhost:105";
 const ledger_user_url = "http://localhost:107";
+
 apiButton.addEventListener('click', function() {
-  
   handleApiButtonClick();
 });
 
 async function handleApiButtonClick() {
+
   const apiCodeValue = apiCodeInput.value;  
-    
-  //const apiEvent = apiEventInput.value;
-  //const apiID = apiIDInput.value;
+
   tmp_loginCheck = await loginCheck();
   console.log(tmp_loginCheck);
+
   if (tmp_loginCheck != null) {
-    
-    if (apiCodeValue == "hello"){
-      fetch(`${apiUrl}/${apiCodeValue}`, {method: 'GET'})
-      .then(response => response.json())
-      .then(data => {
-        console.log(data);
-        alert(JSON.stringify(data.message));
-      })
-      .catch(error => {
-        console.log("Fetch error! (hello)");
-      });
-    } else if (apiCodeValue == "test"){
-      fetch(`${apiUrl}/${apiCodeValue}`, {method: 'POST'})
-      .catch(error => {
-        console.log("Fetch error! (test)");
-      });
-    } else if(apiCodeValue == "add"){ // Fixa så att man kan skicka från form input
+
+    if(apiCodeValue == "add"){ // Fixa så att man kan skicka från form input
       fetch(`${apiUrl}/${apiCodeValue}`, {
         method: 'POST',
         body: JSON.stringify({
@@ -50,24 +33,24 @@ async function handleApiButtonClick() {
 
       if (!isNaN(parsedApiCodeValue)) {
         console.log(parsedApiCodeValue)
-          fetch(`${apiUrl}/find/${apiCodeValue}`)
-              .then(response => response.json())
-              .then(data => {
-                  const apiCreationInput = document.getElementById('api_creation');
-                  apiCreationInput.value = data.date;
-              })
-              .catch(error => {
-                  console.log("Fetch error! (find)");
-              });
+        fetch(`${apiUrl}/find/${apiCodeValue}`)
+        .then(response => response.json())
+        .then(data => {
+            const apiCreationInput = document.getElementById('api_creation');
+            apiCreationInput.value = data.date;
+        })
+        .catch(error => {
+            console.log("Fetch error! (find)");
+        });
       } else {
           console.log("Not an integer");
       }
     }
-  }else {
-    alert("Test with a new account");
+  } else {
+    alert("Account does not exist");
     return;
   }
-}
+};
   
 
 
@@ -86,7 +69,7 @@ async function loginCheck() {
   
   // Check if the username or password is null or empty, and alert the user if so
   if (uname == null || uname == "" || pword == null || pword == "") {
-    alert("invalid input");
+    throw new Error('Invalid input!');
   }
 
   // Try to make a POST request to the login endpoint

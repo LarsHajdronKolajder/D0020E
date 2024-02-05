@@ -1,11 +1,18 @@
 const apiButton = document.querySelector('.apiButton');
 const apiCodeInput = document.getElementById('api_code');
 
+const offerButton = document.getElementById('offerButton');
+
 const apiUrl = "http://localhost:105";
 const ledger_user_url = "http://localhost:107";
+offerButton.disabled = true;
 
 apiButton.addEventListener('click', function() {
   handleApiButtonClick();
+});
+
+offerButton.addEventListener('click',function() {
+  console.log(handleOfferButton());
 });
 
 /**
@@ -51,22 +58,21 @@ async function handleApiButtonClick() {
     return;
   }
 
-  console.log(infoToJson(tmp_loginCheck,apiCodeValue));
+  
 
   alert("You are logged in and have the right access to change this battery Ledger")
-    
-
-
-
-
-
-
-
-
-
-  
+  offerButton.disabled = false;
 };
   
+async function handleOfferButton(){
+  console.log("knapp fungerar")
+  infoToJson();
+}
+
+
+
+//----------------------------------Controls-----------------------------------------------------
+
 
 // Created to check if the batteryID exists and if not create a new one
 // using MongoDB to store the data
@@ -89,31 +95,7 @@ async function batteryIDControll(user,apiCodeValue) {
     console.log(error)
     return;
   }
-
-
 }
-
-// Created to turn the data into a JSON string
-// That will be sent to IPFS
-function infoToJson(owner,apiCodeValue) {
-
-  // Retrive data from website
-  let dateCreation = document.getElementById("api_creation");
-  let amountRefurb = document.getElementById("api_refurb");
-  let dateRefurb = document.getElementById("api_refurbDate");
-  let descRefurb = document.getElementById("api_descriptionRefurb");
-
-  // Turn the data into a JSON string
-  return JSON.stringify({
-    CurOwner: owner,
-    BatteryID: apiCodeValue,
-    DateCreation: dateCreation.value,
-    AmountRefurb: amountRefurb.value,
-    DateRefurb: dateRefurb.value,
-    DescRefurb: descRefurb.value
-  });
-}
-
 
 async function ownerCheck(tmpUser,apiCodeValue) {
   try{
@@ -137,7 +119,6 @@ async function ownerCheck(tmpUser,apiCodeValue) {
     // Set uname to null
   }
 }
-
 
 // Define an asynchronous function called loginCheck
 async function loginCheck() {
@@ -183,6 +164,66 @@ async function loginCheck() {
   }
   // Return the username
   return uname;
+}
+//----------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+//--------------------------------------Sending INFO--------------------------------------------------
+// Created to turn the data into a JSON string
+// That will be sent to IPFS
+async function infoToJson() {
+
+  // Retrive data from website
+  let BatteryID = document.getElementById("api_code");
+  let dateCreation = document.getElementById("api_creation");
+  let amountRefurb = document.getElementById("api_refurb");
+  let dateRefurb = document.getElementById("api_refurbDate");
+  let descRefurb = document.getElementById("api_descriptionRefurb");
+
+  var infoData = await getData(BatteryID.value) 
+  // Turn the data into a JSON string
+  return JSON.stringify({
+    CurOwner: infoData["CurOwner"],
+    BatteryID: BatteryID.value,
+    CID: infoData["CID"],
+    DateCreation: dateCreation.value,
+    AmountRefurb: amountRefurb.value,
+    DateRefurb: dateRefurb.value,
+    DescRefurb: descRefurb.value
+  });
+}
+
+async function getData(batID){
+  
+  try {
+    const response = await fetch(`${apiUrl}/get`, 
+    {
+      method: 'POST', // Specify the method as POST
+      mode: 'cors', // Enable CORS
+      headers: {
+        'Content-Type': 'application/json', // Set the content type of the request body
+        'Accept': 'application/json' // Set the acceptable response content type
+      },
+      body: JSON.stringify({ BatteryID: batID }) // Stringify the username and password into JSON format
+    });
+
+    // If the response status is not OK (200), throw an error
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    return response
+  // If there's an error in the try block, catch it
+  } catch (error) {
+    // Log the error to the console
+    console.error('login:', error);
+    // Set uname to null
+    
+  }
 }
 
 

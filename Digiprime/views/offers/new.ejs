@@ -178,7 +178,7 @@
 
       <!--    API    -->
       <div class="mb-3">
-        <label class="form-label" for="api_code">Testa API</label>
+        <label class="form-label" for="api_code">BatteryID</label>
         <div class="input-group mb-3">
           <input
             type="text"
@@ -197,30 +197,19 @@
           class="form-control"
           type="text"
           id="api_creation"
-          name="offer[api_creation]"
+          name="api_creation"
           placeholder="Year"
           required
         />
       </div>
-      <!-- <label class="form-label" for="api_batteryId">Battery ID</label>
-      <div class="input-group mb-3">
-        <input
-          class="form-control"
-          type="text"
-          id="api_batteryId"
-          name="offer[api_batteryId]"
-          placeholder="Battery ID"
-          required
-          
-        />
-      </div> -->
+      
       <label class="form-label" for="api_refurb">Number of refurbs</label>
       <div class="mb-3">
         <input
           class="form-control"
           type="text"
           id="api_refurb"
-          name="offer[api_refurb]"
+          name="api_refurb"
           placeholder="Number of refurbs"
           required
         />
@@ -231,7 +220,7 @@
           class="form-control"
           type="text"
           id="api_refurbDate"
-          name="offer[api_refurbDate]"
+          name="api_refurbDate"
           placeholder="Refurbish Date (YY-MM-DD)"
           required
         />
@@ -243,7 +232,7 @@
           class="form-control"
           type="text"
           id="api_descriptionRefurb"
-          name="offer[description_refurb]"
+          name="api_descriptionRefurb"
           placeholder="Description of Refurbishment"
           required
         ></textarea>
@@ -266,10 +255,18 @@
                     <button class="btn btn-success">Add Offer</button>
                 </div> -->
       <div class="card-body text-center">
-        <button class="btn btn-success col-5">Add Offer</button>
+        <style>
+          /* Add some styling to make it visually clear that the button is disabled */
+          #offerButton:disabled {
+            background-color: #7d7c7c86;
+            cursor: not-allowed;
+          }
+        </style>
+        <button id="offerButton" class="btn btn-success col-5">Add Offer</button>
         <a class="card-link btn btn-info col-5" href="<%= baseUrl %>/offers"
           >Return</a
         >
+        
       </div>
     </form>
 

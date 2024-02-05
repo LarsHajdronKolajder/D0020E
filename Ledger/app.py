@@ -34,16 +34,11 @@ col_link = db_link.LinkedList #LinkedList example
 @app.route("/get", methods=['POST'])
 def get_sig():
     BatteryID = request.json['BatteryID']
-    signatures = col.find("BatteryID" == BatteryID)
-    sig_list = []
-    for item in signatures:
-        sig_dict = {
-            "_id": str(item['_id']),
-            "CID": item.get('CID', ''),
-            "CurOwner": item.get('CurOwner', ''),
-            "BatteryID": item.get('BatteryID', ''),
-        }
-        sig_list.append(sig_dict)
+    signatures =  col.find_one({
+        "BatteryID": BatteryID
+    })
+    
+    sig_list = [signatures["CID"],signatures["CurOwner"]]
 
     return jsonify(sig_list)
 

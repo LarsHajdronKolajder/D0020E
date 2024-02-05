@@ -23,55 +23,90 @@ async function handleApiButtonClick() {
   tmp_loginCheck = await loginCheck();
   console.log(tmp_loginCheck);
 
-  if (tmp_loginCheck != null) {
-
-    if (parseInt(apiCodeValue)) {
-
-      const parsedApiCodeValue = parseInt(apiCodeValue);
-      
-      if (!isNaN(parsedApiCodeValue)) {
-        console.log(parsedApiCodeValue)
-        try{
-          const response = await fetch((`${apiUrl}/find`),{
-            method: 'POST', // Specify the method as POST
-            mode: 'cors', // Enable CORS
-            headers: {
-              'Content-Type': 'application/json', // Set the content type of the request body
-              'Accept': 'application/json' // Set the acceptable response content type
-            },
-            body: JSON.stringify({ CurOwner: tmp_loginCheck, BatteryID: apiCodeValue })
-          })
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-        }catch (error) {
-          // Log the error to the console
-          console.log(error)
-          alert("Not the current Owner")
-          return
-          // Set uname to null
-        }
-      } else {
-          console.log("Not an integer");
-          return;
-      }
-    }
-    alert("You are logged in and have the right access to change this battery Ledger")
-
-
-
-
-
-
-
-
-
+  if (tmp_loginCheck == null) {
+    alert("Test with a new account, or check your username and password and try again.");
+    return;
   }else {
-    alert("Test with a new account");
+    console.log("You are logged in");
+  }
+
+  // controll that the ID exists and if not we create a new one
+  //using MongoDB to store the data
+
+  if (parseInt(apiCodeValue)) {
+    const parsedApiCodeValue = parseInt(apiCodeValue);
+    if (!isNaN(parsedApiCodeValue)) {
+      console.log(parsedApiCodeValue)
+    } else {
+        console.log("Not an integer");
+        return;
+    }
+  }
+
+  if(await ownerCheck(tmp_loginCheck,apiCodeValue)==false){
+    alert("Not the current Owner")
     return;
   }
+
+  console.log(infoToJson(tmp_loginCheck,apiCodeValue));
+
+  alert("You are logged in and have the right access to change this battery Ledger")
+    
+
+
+
+
+
+
+
+
+
+  
 };
   
+
+function infoToJson(owner,apiCodeValue) {
+
+  // Retrive data from website
+  let dateCreation = document.getElementById("api_creation");
+  let amountRefurb = document.getElementById("api_refurb");
+  let dateRefurb = document.getElementById("api_refurbDate");
+  let descRefurb = document.getElementById("api_descriptionRefurb");
+
+  // Turn the data into a JSON string
+  return JSON.stringify({
+    CurOwner: owner,
+    BatteryID: apiCodeValue,
+    DateCreation: dateCreation.value,
+    AmountRefurb: amountRefurb.value,
+    DateRefurb: dateRefurb.value,
+    DescRefurb: descRefurb.value
+  });
+}
+
+
+async function ownerCheck(tmpUser,apiCodeValue) {
+  try{
+    const response = await fetch((`${apiUrl}/find`),{
+      method: 'POST', // Specify the method as POST
+      mode: 'cors', // Enable CORS
+      headers: {
+        'Content-Type': 'application/json', // Set the content type of the request body
+        'Accept': 'application/json' // Set the acceptable response content type
+      },
+      body: JSON.stringify({ CurOwner: tmpUser, BatteryID: apiCodeValue })
+    })
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+  }catch (error) {
+    // Log the error to the console
+    console.log(error)
+    alert("Not the current Owner")
+    return false;
+    // Set uname to null
+  }
+}
 
 
 // Define an asynchronous function called loginCheck

@@ -192,7 +192,7 @@
           <th scope="col"><a class="btn btn-primary apiButton" style="float:right;" role="button">Hämta API</a></th>
       </div>
       <label class="form-label" for="api_creation">Date of Creation</label>
-      <div class="input-group mb-3">
+      <div class="mb-3">
         <input
           class="form-control"
           type="text"
@@ -202,7 +202,7 @@
           required
         />
       </div>
-      <label class="form-label" for="api_batteryId">Battery ID</label>
+      <!-- <label class="form-label" for="api_batteryId">Battery ID</label>
       <div class="input-group mb-3">
         <input
           class="form-control"
@@ -213,9 +213,9 @@
           required
           
         />
-      </div>
+      </div> -->
       <label class="form-label" for="api_refurb">Number of refurbs</label>
-      <div class="input-group mb-3">
+      <div class="mb-3">
         <input
           class="form-control"
           type="text"
@@ -226,7 +226,7 @@
         />
       </div>
       <label class="form-label" for="api_refurbDate">Refurb date</label>
-      <div class="input-group mb-3">
+      <div class="mb-3">
         <input
           class="form-control"
           type="text"
@@ -235,6 +235,20 @@
           placeholder="Refurbish Date (YY-MM-DD)"
           required
         />
+      </div>
+
+      <label class="form-label" for="api_descriptionRefurb">Description of Refurbishment</label>
+      <div class="mb-3">
+        <textarea
+          class="form-control"
+          type="text"
+          id="api_descriptionRefurb"
+          name="offer[description_refurb]"
+          placeholder="Description of Refurbishment"
+          required
+        ></textarea>
+        
+        
       </div>
       <!--    API    -->
       <label for="image" class="form-label">Multiple image input</label>

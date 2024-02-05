@@ -30,9 +30,6 @@ async function handleApiButtonClick() {
     console.log("You are logged in");
   }
 
-  // controll that the ID exists and if not we create a new one
-  //using MongoDB to store the data
-
   if (parseInt(apiCodeValue)) {
     const parsedApiCodeValue = parseInt(apiCodeValue);
     if (!isNaN(parsedApiCodeValue)) {
@@ -42,6 +39,12 @@ async function handleApiButtonClick() {
         return;
     }
   }
+
+  await batteryIDControll(tmp_loginCheck,apiCodeValue)
+  // controll that the ID exists and if not we create a new one
+  //using MongoDB to store the data
+
+  
 
   if(await ownerCheck(tmp_loginCheck,apiCodeValue)==false){
     alert("Not the current Owner")
@@ -65,6 +68,33 @@ async function handleApiButtonClick() {
 };
   
 
+// Created to check if the batteryID exists and if not create a new one
+// using MongoDB to store the data
+async function batteryIDControll(user,apiCodeValue) {
+  try{
+    const response = await fetch((`${apiUrl}/batteryID`),{
+      method: 'POST', // Specify the method as POST
+      mode: 'cors', // Enable CORS
+      headers: {
+        'Content-Type': 'application/json', // Set the content type of the request body
+        'Accept': 'application/json' // Set the acceptable response content type
+      },
+      body: JSON.stringify({ UserName: user, BatteryID: apiCodeValue })
+    })
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+  }catch (error) {
+    // Log the error to the console
+    console.log(error)
+    return;
+  }
+
+
+}
+
+// Created to turn the data into a JSON string
+// That will be sent to IPFS
 function infoToJson(owner,apiCodeValue) {
 
   // Retrive data from website

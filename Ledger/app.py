@@ -47,7 +47,29 @@ def get_sig():
 
     return jsonify(sig_list)
 
+@app.route("/batteryID", methods=['POST'])
+def batteryID():
+    
+    # Retrieve BatteryID and UserName from the request's JSON data
+    BatteryID = request.json['BatteryID']
+    UserName = request.json['UserName']
+    
+    try:
+        # Check if BatteryID already exists in the collection
+        if col.find_one({"BatteryID": BatteryID}) == None:
+            raise DuplicateKeyError("BatteryID already exists")
+        return jsonify({"Good":"Exists"})
+    except:
+        # Create a new battery document with BatteryID, CurOwner, and CID
+        newBattery = {
+            "BatteryID": BatteryID,
+            "CurOwner": UserName,
+            "CID": "null"
+        }     
+        col.insert_one(newBattery)
+        return jsonify({"Good":"NEW"})
 
+   
 # This route handles the "/find" endpoint and expects a POST request
 @app.route("/find", methods=['POST'])
 def get_data_from_database():

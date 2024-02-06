@@ -40,12 +40,14 @@ module.exports.offerSchema = Joi.object({
     referenceType: Joi.string().required().escapeHTML(),
     description: Joi.string().required().escapeHTML(),
     location: Joi.string().required().escapeHTML(),
-    api_creation: Joi.string().required().escapeHTML(),
-    api_batteryId: Joi.string().required().escapeHTML(),
-    api_refurb: Joi.string().required().escapeHTML(),
-    api_refurbDate: Joi.string().required().escapeHTML(),
+    
 
   }).required(),
+  api_code: Joi.string().escapeHTML(),
+  api_creation: Joi.string().escapeHTML(),
+  api_refurb: Joi.string().escapeHTML(),
+  api_refurbDate: Joi.string().escapeHTML(),
+  api_descriptionRefurb: Joi.string().escapeHTML(),
   deleteImages: Joi.array(),
   actAs: Joi.string().escapeHTML(),
 });

@@ -12,7 +12,7 @@ apiButton.addEventListener('click', function() {
 });
 
 offerButton.addEventListener('click',function() {
-  console.log(handleOfferButton());
+  handleOfferButton();
 });
 
 /**

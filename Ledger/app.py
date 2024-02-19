@@ -18,7 +18,6 @@ CORS(app, resources={r"/*": {"origins": "*"}})
 
 #connection_string =  os.environ.get('LEDGER_URL')
 
-connection_string = "mongodb+srv://LedgerSuperSecretUsername97187:Jdl7WM2E23aAxSPN@ledgerhistorydb.aeueeyi.mongodb.net/" #os.environ.get('LEDGER_URL')
 
 
 cluster = MongoClient(connection_string, server_api = ServerApi('1'))
@@ -27,8 +26,8 @@ db = cluster['SignatureID']  # Database ID
 col = db.Signature      # Collection ID
 
 
-db_link = cluster['LinkedTest']
-col_link = db_link.LinkedList #LinkedList example
+db_user = cluster['Users']
+col_user = db_user.ID #LinkedList example
 
 
 @app.route("/get", methods=['POST'])
@@ -72,14 +71,28 @@ def get_data_from_database():
     JsonBattery = request.json['BatteryID']  # Extract the value of "BatteryID" from the JSON data
     print(JsonBattery)  # Print the extracted "BatteryID"
     JsonCurOwner = request.json['CurOwner']  # Extract the value of "CurOwner" from the JSON data
+    print(JsonCurOwner)  # Print the extracted "CurOwner"
 
     # Find a document in the collection where "BatteryID" matches the extracted "JsonBattery"
     BatteryID = col.find_one({
         "BatteryID": JsonBattery
     })
 
+    tempBrokers =[]
+    BrokerRole = col_user.find_one({
+        "username": JsonCurOwner
+    })
+    try:
+        tempBrokers = BrokerRole["seller"].split(",")
+    except:
+        tempBrokers = BrokerRole["seller"]
+
+
+    print(tempBrokers,"BrokerRole")
     # Check if the "CurOwner" in the found document matches the extracted "JsonCurOwner"
     if BatteryID["CurOwner"] == JsonCurOwner:
+        return jsonify({"respone": "Correct Owner"}), 200  # Return a JSON response with "Correct Owner" message and 200 status code
+    elif BrokerRole["role"] == "bro" and BatteryID["CurOwner"] in tempBrokers:
         return jsonify({"respone": "Correct Owner"}), 200  # Return a JSON response with "Correct Owner" message and 200 status code
     else:
         return jsonify({"error": "Signature not found"}), 404  # Return a JSON response with "Signature not found" error and 404 status code

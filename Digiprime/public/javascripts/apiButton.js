@@ -108,6 +108,7 @@ async function ownerCheck(tmpUser,apiCodeValue) {
       },
       body: JSON.stringify({ CurOwner: tmpUser, BatteryID: apiCodeValue })
     })
+    console.log(response)
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }

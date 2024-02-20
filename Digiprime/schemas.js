@@ -40,6 +40,7 @@ module.exports.offerSchema = Joi.object({
     referenceType: Joi.string().required().escapeHTML(),
     description: Joi.string().required().escapeHTML(),
     location: Joi.string().required().escapeHTML(),
+<<<<<<< Updated upstream
     
 
   }).required(),
@@ -48,9 +49,37 @@ module.exports.offerSchema = Joi.object({
   api_refurb: Joi.string().escapeHTML(),
   api_refurbDate: Joi.string().escapeHTML(),
   api_descriptionRefurb: Joi.string().escapeHTML(),
+=======
+  }).required(),
+  api_creation: Joi.string().escapeHTML(),
+  api_batteryId: Joi.string().escapeHTML(),
+  api_refurb: Joi.string().escapeHTML(),
+  api_refurbDate: Joi.string().escapeHTML(),
+>>>>>>> Stashed changes
   deleteImages: Joi.array(),
   actAs: Joi.string().escapeHTML(),
 });
+
+module.exports.historySchema = Joi.object({
+  offer: Joi.object({
+    title: Joi.string().required().escapeHTML(),
+    price: Joi.number().required().min(0),
+    unit: Joi.string().required().escapeHTML(),
+    // image: Joi.string().required(),
+    costumer: Joi.string().required().escapeHTML(),
+    referenceSector: Joi.string().required().escapeHTML(),
+    referenceType: Joi.string().required().escapeHTML(),
+    description: Joi.string().required().escapeHTML(),
+    location: Joi.string().required().escapeHTML(),
+  }).required(),
+  api_creation: Joi.string().escapeHTML(),
+  api_batteryId: Joi.string().escapeHTML(),
+  api_refurb: Joi.string().escapeHTML(),
+  api_refurbDate: Joi.string().escapeHTML(),
+  deleteImages: Joi.array(),
+  actAs: Joi.string().escapeHTML(),
+});
+
 
 module.exports.reviewSchema = Joi.object({
   review: Joi.object({

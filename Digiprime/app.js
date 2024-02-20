@@ -29,6 +29,7 @@ const notificationRoutes = require("./routes/notification");
 const { notificationMiddleware } = require("./controllers/notification");
 const formatDistanceToNow = require("date-fns/formatDistanceToNow");
 const cookie = require('cookie');
+const historyOffer = require("./routes/history");
 
 // const { csrfProtection } = require("./utils/csrf");
 
@@ -238,6 +239,8 @@ app.use(notificationMiddleware);
 //   next();
 // });
 
+app.use(`${BASE_URL}/history`, historyOffer);
+console.log(`Mounted historyOffer route at ${BASE_URL}/history`);
 app.use(`${BASE_URL}/auth`, userRoutes);
 app.use(`${BASE_URL}/offers`, offerRoutes);
 app.use(`${BASE_URL}/offers/:id/reviews`, reviewRoutes);
@@ -247,6 +250,7 @@ app.use(`${BASE_URL}/negotiations`, negotiationRoutes);
 app.use(`${BASE_URL}/messages`, messageRoutes);
 app.use(`${BASE_URL}/broker`, brokerRoutes);
 app.use(`${BASE_URL}/notifications`, notificationRoutes);
+
 
 app.get(`${BASE_URL}/`, (req, res) => {
   res.render("home");

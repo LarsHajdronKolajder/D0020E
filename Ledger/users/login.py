@@ -11,7 +11,7 @@ app.secret_key = 'TEST_SECRET_KEY'
 # Routes
 @app.route('/')
 def home():
-    response_data = {'default': 'page'}
+    response_data = {'default': '107'}
     return jsonify(response_data)
 
 @app.route('/hello')
@@ -26,10 +26,6 @@ def signup():
 @app.route('/ledger/login', methods=['GET', 'POST'])
 def login():
     return User().login()
-
-@app.route('/ledger/role', methods=['GET', 'POST'])
-def role():
-    return User().role()
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=107)

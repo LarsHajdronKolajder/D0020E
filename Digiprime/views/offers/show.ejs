@@ -98,6 +98,13 @@
         >Get History</a
       >
     </th>
+    <a
+    class="btn btn-primary purchaseButton"
+    id="purchaseButton"
+    style="float: right; margin-right: 100px;"
+    role="button"
+    >Purchase offer</a
+    >
   </div>
   <div class="col-6">
     <div class="mb-3" id="map"></div>
@@ -214,3 +221,5 @@
   const offer = <%- JSON.stringify(offer) %>;
 </script>
 <script src="<%= baseUrl %>/javascripts/showPageMap.js"></script>
+<script src="<%= baseUrl %>/javascripts/ownerChange.js"></script>
+

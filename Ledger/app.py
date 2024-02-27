@@ -67,7 +67,7 @@ def update_cid():
 
 
 @app.route("/getCID", methods=['POST'])
-def get_cid():#
+def get_cid():
     BatteryID = request.json['BatteryID']
     signatures = col.find_one({
         "BatteryID": BatteryID

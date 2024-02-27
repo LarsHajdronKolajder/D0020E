@@ -122,7 +122,8 @@ const connectSrcUrls = [
   "http://localhost:105",    //docker API URL
   "http://localhost:107",
   "http://localhost:107/",
-  "http://localhost:107/user/login"
+  "http://localhost:107/user/login",
+  "http://172.19.0.2:3009/" //ipfs api
 ];
 
 let imgSrcUrls = [

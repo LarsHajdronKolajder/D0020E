@@ -177,29 +177,33 @@
       </div>
 
       <!--    API    -->
-      <div class="mb-3">
-        <label class="form-label" for="api_code">BatteryID</label>
-        <div class="input-group mb-3">
-          <input
-            type="text"
-            class="form-control"
-            id="api_code"
-            placeholder="API URI"
-            aria-label="api_code"
-            aria-describedby="api_code-label"
-            optional
-          />
+          <div class="mb-3">
+            <label class="form-label" for="api_code">BatteryID</label>
+            <div class="input-group mb-3">
+              <input
+                type="text"
+                class="form-control"
+                id="api_code"
+                name="offer[api_code]"
+                placeholder="API URI"
+                aria-label="api_code"
+                aria-describedby="api_code-label"
+                required
+              />
+            </div>
+          </div>
+
           <a class="btn btn-primary apiButton" style="float:right;" role="button">Hämta API</a>
-      </div>
+      
       <label class="form-label" for="api_creation">Date of Creation</label>
-      <div class="mb-3">
+      <div class="input-group mb-3">
         <input
           class="form-control"
           type="text"
           id="api_creation"
-          name="api_creation"
+          name="offer[api_creation]"
           placeholder="Year"
-          optional
+          required
         />
       </div>
       
@@ -209,7 +213,7 @@
           class="form-control"
           type="text"
           id="api_refurb"
-          name="api_refurb"
+          name="offer[api_refurb]"
           placeholder="Number of refurbs"
           optional
         />
@@ -220,7 +224,7 @@
           class="form-control"
           type="text"
           id="api_refurbDate"
-          name="api_refurbDate"
+          name="offer[api_refurbDate]"
           placeholder="Refurbish Date (YY-MM-DD)"
           optional
         />
@@ -232,7 +236,7 @@
           class="form-control"
           type="text"
           id="api_descriptionRefurb"
-          name="api_descriptionRefurb"
+          name="offer[api_descriptionRefurb]"
           placeholder="Description of Refurbishment"
           optional
         ></textarea>

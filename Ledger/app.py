@@ -41,6 +41,50 @@ def get_sig():
 
     return jsonify(sig_list)
 
+@app.route("/updateCID", methods=['POST'])
+def update_cid():
+    try:
+        # Get the data from the req
+        data = request.json
+        battery_id = data.get('batteryID')
+        digiprime_id = data.get('digiprimeID')
+        new_cid = data.get('newCID')
+
+        # Update batteryID entry with new CID from IPFS 
+        # & add digiprime ID for getHistory button
+        result = col.update_one(
+            {"BatteryID": battery_id},
+            {"$set": {"CID": new_cid, "digiprimeID": digiprime_id}}
+        )
+
+        if result.modified_count == 1:
+            return jsonify({"status": "success", "message": "CID updated successfully"})
+        else:
+            return jsonify({"status": "error", "message": "Failed to update CID"})
+
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)})
+
+
+@app.route("/getCID", methods=['POST'])
+def get_cid():#
+    BatteryID = request.json['BatteryID']
+    signatures = col.find_one({
+        "BatteryID": BatteryID
+    })
+
+    if signatures:
+        return jsonify({
+            "CID": signatures.get("CID", ""),
+            "CurOwner": signatures.get("CurOwner", "")
+        })
+    else:
+        return jsonify({
+            "CID": "",
+            "CurOwner": signatures.get("CurOwner", "")
+        })
+
+
 @app.route("/batteryID", methods=['POST'])
 def batteryID():
     

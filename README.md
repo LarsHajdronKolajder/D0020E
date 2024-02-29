@@ -106,8 +106,18 @@ User login credentials will be securely stored in MongoDB. Initially, certain in
   - `bro`: This is the role of a broker that let you sell for other accounts
 - `seller`: Specific to broker accounts, indicating the sellers they are authorized to represent.
 
-
+#### Example
 ![Example](https://github.com/LarsHajdronKolajder/D0020E/blob/dev/README_image/exampledb.png)
+
+### Guidelines for Utilizing the Login System
+
+When the user access the `new offer` page they will have to fill out the BatteryID, when this is done and the user press _Hämta API_ (fetch API) they will be promted with the login system. Where inputs are seperated with `:`
+
+![login](https://github.com/LarsHajdronKolajder/D0020E/blob/dev/README_image/loginprompt.png)
+- `login`: Represents what command you send .
+- `username`: Represents the account holder's username on the website.
+- `password`: Encrypted password used for account authentication.
+
 
 
 ## License

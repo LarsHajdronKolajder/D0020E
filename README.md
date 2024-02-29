@@ -106,8 +106,8 @@ User login credentials will be securely stored in MongoDB. Initially, certain in
   - `bro`: This is the role of a broker that let you sell for other accounts
 - `seller`: Specific to broker accounts, indicating the sellers they are authorized to represent.
 
-#### Example:
-![alt text]([https://github.com/[username]/[reponame]/blob/[branch]/image.jpg?raw=true](https://github.com/LarsHajdronKolajder/D0020E/blob/dev/README_image/exampledb.png?=raw))
+
+![Example]([https://github.com/[username]/[reponame]/blob/[branch]/image.jpg?raw=true](https://github.com/LarsHajdronKolajder/D0020E/blob/dev/README_image/exampledb.png?=raw)])
 
 
 ## License

@@ -86,6 +86,30 @@ To keep data between runs [docker volumes](https://docs.docker.com/storage/volum
 
 To persist MongoDB mount `/data/db` which is where Mongo stores the data.
 
+## RBAC
+
+Our RBAC system is built on top of an existing RBAC system, which couldn't be modified. This led to the development of our system, featuring a simplified visual frontend. While the frontend was simple, the backend was especially developt to seamlessly integrate with the pre-existing RBAC system, ensuring that the vital controls and checks will work.
+
+
+
+### MongoDB
+
+User login credentials will be securely stored in MongoDB. Initially, certain information will only be modifiable through direct database access, such as role and seller.
+
+#### Database information for RBAC:
+
+- `username`: Represents the account holder's username on the website.
+- `password`: Encrypted password used for account authentication.
+- `role`: Defines the user's role, with options including sel for sellers, dev for developers, and bro for brokers.
+- - `sel`: This is the role for accounts that can sell.
+  - `dev`: This is just a developer account.
+  - `bro`: This is the role of a broker that let you sell for other accounts
+- `seller`: Specific to broker accounts, indicating the sellers they are authorized to represent.
+
+#### Example:
+
+
+
 ## License
 
 Licensed under either of

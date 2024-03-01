@@ -54,7 +54,7 @@ When the user access the `new offer` page they will have to fill out the `Batter
 - `password`: Pssword used for account authentication.
 
 #### Signup
-![signup](https://github.com/LarsHajdronKolajder/D0020E/blob/dev/README_image/loginprompt.png)
+![signup](https://github.com/LarsHajdronKolajder/D0020E/blob/dev/README_image/signup.png)
 - `signup`: Represents the command that create an account.
 - `username`: Represents the new accounts username on the website.
 - `password`: Pssword used for account authentication.

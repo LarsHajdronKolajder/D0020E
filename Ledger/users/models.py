@@ -22,7 +22,7 @@ class User:
             "_id": uuid.uuid4().hex,
             "username": uname,
             "password": pword,
-            "role": 'dev'
+            "role": 'sel',
         }
 
         user['password'] = pbkdf2_sha256.encrypt(user['password'])

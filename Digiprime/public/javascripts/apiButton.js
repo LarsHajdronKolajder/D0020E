@@ -123,32 +123,59 @@ async function loginCheck() {
     throw new Error('Invalid input!');
   }
 
-  // Try to make a POST request to the login endpoint
-  try {
-    const response = await fetch(`${ledger_user_url}/ledger/login`, 
-    {
-      method: 'POST', // Specify the method as POST
-      mode: 'cors', // Enable CORS
-      headers: {
-        'Content-Type': 'application/json', // Set the content type of the request body
-        'Accept': 'application/json' // Set the acceptable response content type
-      },
-      body: JSON.stringify({ username: uname, password: pword }) // Stringify the username and password into JSON format
-    });
+  if (command == "login") {
+    // Try to make a POST request to the login endpoint
+    try {
+      const response = await fetch(`${ledger_user_url}/ledger/login`, 
+      {
+        method: 'POST', // Specify the method as POST
+        mode: 'cors', // Enable CORS
+        headers: {
+          'Content-Type': 'application/json', // Set the content type of the request body
+          'Accept': 'application/json' // Set the acceptable response content type
+        },
+        body: JSON.stringify({ username: uname, password: pword }) // Stringify the username and password into JSON format
+      });
 
-    // If the response status is not OK (200), throw an error
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      // If the response status is not OK (200), throw an error
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+    // If there's an error in the try block, catch it
+    } catch (error) {
+      // Log the error to the console
+      console.error('login:', error);
+      // Set uname to null
+      uname = null;
     }
-  // If there's an error in the try block, catch it
-  } catch (error) {
-    // Log the error to the console
-    console.error('login:', error);
-    // Set uname to null
-    uname = null;
+    // Return the username
+    return uname;
+  } else if (command == "signup") {
+    try {
+      const response = await fetch(`${ledger_user_url}/ledger/signup`, 
+      {
+        method: 'POST', // Specify the method as POST
+        mode: 'cors', // Enable CORS
+        headers: {
+          'Content-Type': 'application/json', // Set the content type of the request body
+          'Accept': 'application/json' // Set the acceptable response content type
+        },
+        body: JSON.stringify({ username: uname, password: pword }) // Stringify the username and password into JSON format
+      });
+
+      // If the response status is not OK (200), throw an error
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+    // If there's an error in the try block, catch it
+    } catch (error) {
+      // Log the error to the console
+      console.error('login:', error);
+      // Set uname to null
+      uname = null;
+    }
+    return null;
   }
-  // Return the username
-  return uname;
 }
 
 offerButton.addEventListener('click',function() {

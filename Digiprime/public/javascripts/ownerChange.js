@@ -4,12 +4,16 @@ const apiUrl = "http://localhost:105"; // fetch ledger info
 const ledger_user_url = "http://localhost:107"; // check user info
 
 buyButton.addEventListener("click", function () {
-  handleClick();
+
+  // Get the battery ID
+  const batteryID = buyButton.name;
+
+  handleClick(batteryID);
 });
 
-async function handleClick() {
-  // Get the battery ID
-  const batteryID = "500";
+async function handleClick(batteryID) {
+
+  console.log("batteryID: ", batteryID)
 
   // Prompt the user for their username and password
   let input = prompt(

@@ -107,7 +107,7 @@ app.get('/get-content', async (req, res) => {
         const response = await axios.post(`http://ipfs_host:5001/api/v0/cat?arg=${cid}`);
         const responseData = response.data;
 
-        res.json({ status: 'success', responseData})
+        res.json({ status: 'success', responseData })
 
     } catch (error) {
         console.error('Error downloading file: ', error.message)
@@ -117,20 +117,20 @@ app.get('/get-content', async (req, res) => {
 
 // Use POST for handling JSON data
 app.post('/add3', async (req, res) => {
-  try {
-    const jsonContent = req.body; // Access JSON content from request body
-    console.log(jsonContent);
+    try {
+        const jsonContent = req.body; // Access JSON content from request body
+        console.log(jsonContent);
 
-    // Convert JSON content to string before adding to FormData
-    const fileContent = JSON.stringify(jsonContent);
+        // Convert JSON content to string before adding to FormData
+        const fileContent = JSON.stringify(jsonContent);
 
-    const result = await addAndPin(fileContent);
+        const result = await addAndPin(fileContent);
 
-    res.json(result);
-  } catch (error) {
-    console.error('Error adding/pinning file:', error.message);
-    res.status(500).json({ status: 'error', message: 'Internal Server Error' });
-  }
+        res.json(result);
+    } catch (error) {
+        console.error('Error adding/pinning file:', error.message);
+        res.status(500).json({ status: 'error', message: 'Internal Server Error' });
+    }
 });
 
 //Should be app.get('/download/:cid) in reality, this is for testing

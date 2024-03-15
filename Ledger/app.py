@@ -8,8 +8,10 @@ from bson.objectid import ObjectId
 from pymongo.errors import DuplicateKeyError
 from bson.json_util import dumps
 
+import os
 
-connection_string = "mongodb+srv://LedgerSuperSecretUsername97187:Jdl7WM2E23aAxSPN@ledgerhistorydb.aeueeyi.mongodb.net/"
+
+connection_string = os.environ.get('LEDGER_URL') # Connection string from MongoDB Atlas
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})

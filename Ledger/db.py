@@ -5,9 +5,7 @@ import os
 from flask import jsonify
 import asyncio
 
-#os.environ.get('LEDGER_URL')
-
-connection_string = "mongodb+srv://LedgerSuperSecretUsername97187:Jdl7WM2E23aAxSPN@ledgerhistorydb.aeueeyi.mongodb.net/" #os.environ.get('LEDGER_URL')
+connection_string = os.environ.get('LEDGER_URL') # Connection string from MongoDB Atlas
 
 cluster = MongoClient(connection_string, server_api = ServerApi('1'))
 

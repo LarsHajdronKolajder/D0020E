@@ -50,6 +50,9 @@ docker run -p 3000:3000 \
   --env CLOUDINARY_KEY=<your info> \
   --env CLOUDINARY_SECRET=<your info> \
   --env APIKEY=<project_api_key> \
+  --env LEDGER_URL=<your MongoDB url> \
+  -p 105:105 \
+  -p 107:107 \
   -v mongodb_data:/data/db \
   digiprime
 ```
@@ -79,6 +82,7 @@ not be changed.
 - `DB_URL`: Database URL for Digiprime, can be set to use another database.
 - `PORT`: Port to launch Digiprime. However, the image only exposes port `3000` so leave this alone.
 - `DATABASE_URL`: Database URL for Negotiation Engine, can be set to use another database.
+- `LEDGER_URL`: MongoDB database URL for the Ledger, use your own.
 
 ### Persisting data
 

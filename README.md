@@ -99,6 +99,24 @@ Our RBAC system is built on top of an existing RBAC system, which couldn't be mo
 
 User login credentials will be securely stored in MongoDB. Initially, certain information will only be modifiable through direct database access, such as role and seller.
 
+#### Setup
+
+Setting up your own MongoDB cloud server is required for the Ledger to work fully.
+
+Example MongoDB structure
+
+-`DATABASE NAME`
+  -`COLLECTION NAME`
+
+The required MongoDB structure is:
+
+-`Users`
+  -`ID`
+
+-`SignatureID`
+  -`Signature`
+
+
 #### Database information for RBAC:
 
 - `username`: Represents the account holder's username on the website.

@@ -105,16 +105,16 @@ Setting up your own MongoDB cloud server is required for the Ledger to work full
 
 Example MongoDB structure
 
--`DATABASE NAME`
-  -`COLLECTION NAME`
+- `DATABASE NAME`
+  - `COLLECTION NAME`
 
 The required MongoDB structure is:
 
--`Users`
-  -`ID`
+- `Users`
+  - `ID`
 
--`SignatureID`
-  -`Signature`
+- `SignatureID`
+  - `Signature`
 
 
 #### Database information for RBAC:

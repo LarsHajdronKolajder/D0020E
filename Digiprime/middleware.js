@@ -19,6 +19,7 @@ const {
   auctionSchema,
   brokerAgreementSchema,
   representSchema,
+  historySchema,
 } = require("./schemas.js");
 
 module.exports.isLoggedIn = (req, res, next) => {

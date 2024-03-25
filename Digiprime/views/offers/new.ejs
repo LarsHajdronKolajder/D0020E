@@ -48,7 +48,7 @@
           <option value="mancode">Automotive</option>
         </select>
 <!-- Added code -->
-          <th scope="col"><a class="btn btn-primary customActionButton" style="float:right;" role="button">Fetch data</a></th>
+          <th scope="col"><a class="btn btn-primary customActionButton" style="float:right;" role="button">Hämta data</a></th>
           <!-- <button id="customActionButton" type="button" class="btn btn-primary">Retrieve Data</button> --->
         </div>
       </div>
@@ -176,8 +176,76 @@
         <div class="valid-feedback">Looks good!</div>
       </div>
 
+      <!--    API    -->
+          <div class="mb-3">
+            <label class="form-label" for="api_code">BatteryID</label>
+            <div class="input-group mb-3">
+              <input
+                type="text"
+                class="form-control"
+                id="api_code"
+                name="offer[api_code]"
+                placeholder="API URI"
+                aria-label="api_code"
+                aria-describedby="api_code-label"
+                required
+              />
+            </div>
+          </div>
+
+          <a class="btn btn-primary apiButton" style="float:right;" role="button">Hämta API</a>
+      
+      <label class="form-label" for="api_creation">Date of Creation</label>
+      <div class="input-group mb-3">
+        <input
+          class="form-control"
+          type="text"
+          id="api_creation"
+          name="offer[api_creation]"
+          placeholder="Year"
+          required
+        />
+      </div>
+      
+      <label class="form-label" for="api_refurb">Number of refurbs</label>
       <div class="mb-3">
-        <label for="image" class="form-label">Multiple image input</label>
+        <input
+          class="form-control"
+          type="text"
+          id="api_refurb"
+          name="offer[api_refurb]"
+          placeholder="Number of refurbs"
+          optional
+        />
+      </div>
+      <label class="form-label" for="api_refurbDate">Refurb date</label>
+      <div class="mb-3">
+        <input
+          class="form-control"
+          type="text"
+          id="api_refurbDate"
+          name="offer[api_refurbDate]"
+          placeholder="Refurbish Date (YY-MM-DD)"
+          optional
+        />
+      </div>
+
+      <label class="form-label" for="api_descriptionRefurb">Description of Refurbishment</label>
+      <div class="mb-3">
+        <textarea
+          class="form-control"
+          type="text"
+          id="api_descriptionRefurb"
+          name="offer[api_descriptionRefurb]"
+          placeholder="Description of Refurbishment"
+          optional
+        ></textarea>
+        
+        
+      </div>
+      <!--    API    -->
+      <label for="image" class="form-label">Multiple image input</label>
+      <div class="mb-3">
         <input
           class="form-control"
           type="file"
@@ -191,10 +259,18 @@
                     <button class="btn btn-success">Add Offer</button>
                 </div> -->
       <div class="card-body text-center">
-        <button class="btn btn-success col-5">Add Offer</button>
+        <style>
+          /* Add some styling to make it visually clear that the button is disabled */
+          #offerButton:disabled {
+            background-color: #7d7c7c86;
+            cursor: not-allowed;
+          }
+        </style>
+        <button id="offerButton" class="btn btn-success col-5">Add Offer</button>
         <a class="card-link btn btn-info col-5" href="<%= baseUrl %>/offers"
           >Return</a
         >
+        
       </div>
     </form>
 
@@ -202,6 +278,8 @@
     <footer></footer>
   </div>
 </div>
+
+<script src="<%= baseUrl %>/javascripts/apiButton.js"></script>
 <script src="<%= baseUrl %>/javascripts/customAction.js"></script>
 <script src="<%= baseUrl %>/javascripts/formController.js"></script>
 <script src="<%= baseUrl %>/javascripts/referenceFillers.js"></script>

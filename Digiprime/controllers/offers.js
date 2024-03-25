@@ -9,6 +9,7 @@ const dis = require("../lib/dismitted");
 const bat = require("../lib/battery");
 const formatDistanceToNow = require("date-fns/formatDistanceToNow");
 const cookie = require('cookie');
+const IPFS = require("../lib/offer");
 
 const util = require('util');
 const { getPage, createPagination } = require("../lib/paginate");
@@ -121,45 +122,74 @@ module.exports.dismitted = async (req, res) => {
 // Test
 
 module.exports.create = async (req, res) => {
-  const { username, role } = req.user;
-  const { actAs, offer } = req.body;
+  try {
+    const { username, role } = req.user;
+    const { actAs, offer } = req.body;
 
-  const geoData = await geocoder
-    .forwardGeocode({
-      query: req.body.offer.location,
-      limit: 1,
-    })
-    .send();
+    const geoData = await geocoder
+      .forwardGeocode({
+        query: req.body.offer.location,
+        limit: 1,
+      })
+      .send();
 
-  let author = req.user._id;
-  if (role == "broker") {
-    const agreements = await ne.getRepresenting(username);
-    let found = false;
-    for (const agreement of agreements) {
-      if (agreement.represented == actAs) {
-        found = true;
-        break;
+    let author = req.user._id;
+    if (role == "broker") {
+      const agreements = await ne.getRepresenting(username);
+      let found = false;
+      for (const agreement of agreements) {
+        if (agreement.represented == actAs) {
+          found = true;
+          break;
+        }
       }
+      if (!found) {
+        throw ExpressError("Invalid agreement with user", 400);
+      }
+      const user = await User.findOne({ username: actAs });
+      author = user._id;
     }
-    if (!found) {
-      throw ExpressError("Invalid agreement with user", 400);
-    }
-    const user = await User.findOne({ username: actAs });
-    author = user._id;
+
+    const newOffer = new Offer(offer);
+    newOffer.geometry = geoData.body.features[0].geometry;
+    newOffer.images = req.files.map((f) => ({
+      url: f.path,
+      filename: f.filename,
+    }));
+    newOffer.author = author;
+    newOffer.deleted = false;
+
+    await newOffer.save();
+
+    const copyNewOffer = {
+      title: newOffer.title,
+      location: newOffer.location,
+      costumer: newOffer.costumer,
+      referenceSector: newOffer.referenceSector,
+      referenceType: newOffer.referenceType,
+      price: newOffer.price,
+      unit: newOffer.unit,
+      description: newOffer.description,
+      geometry: newOffer.geometry,
+      images: newOffer.images,
+      api_code: offer.api_code,
+      api_creation: offer.api_creation,
+      api_refurb: offer.api_refurb,
+      api_refurbDate: offer.api_refurbDate,
+      api_descriptionRefurb: offer.api_descriptionRefurb,
+      id: newOffer._id,
+    };
+
+    IPFS.EncryptAndUploadToIPFS(copyNewOffer);
+
+    req.flash("success", "Successfully made a new offer!");
+    res.redirect(`${req.app.locals.baseUrl}/offers/${newOffer._id}`);
+  } catch (error) {
+    console.error('Error:', error);
+    // Handle error response
+    req.flash("error", "Failed to create a new offer");
+    //res.send(newOffer);
   }
-
-  const newOffer = new Offer(offer);
-  newOffer.geometry = geoData.body.features[0].geometry;
-  newOffer.images = req.files.map((f) => ({
-    url: f.path,
-    filename: f.filename,
-  }));
-  newOffer.author = author;
-  newOffer.deleted = false;
-  await newOffer.save();
-
-  req.flash("success", "Successfully made a new offer!");
-  res.redirect(`${req.app.locals.baseUrl}/offers/${newOffer._id}`);
 };
 
 module.exports.show = async (req, res) => {

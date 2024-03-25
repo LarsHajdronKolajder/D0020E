@@ -1,0 +1,4 @@
+node_modules
+.env
+IPFS/ipfs_staging/*
+IPFS/ipfs_data/*

@@ -58,6 +58,11 @@ const OfferSchema = new Schema(
       },
     ],
     deleted: Boolean,
+    api_code: String,
+    api_creation: Date,
+    api_refurb: Number,
+    api_dateRefurb: Date,
+    api_descriptionRefurb: String,
   },
   opts
 );

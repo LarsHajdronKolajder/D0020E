@@ -1,0 +1,27 @@
+<% layout('layouts/boilerplate') %>
+
+<h1>Item History</h1>
+
+<!-- Display information for each item in the history -->
+<% Object.values(data).forEach((item, index) => { %>
+  <div class="history-item" data-index="<%= index %>">
+    <h3>Title: <%= item.title %></h3>
+    <p>BatteryID: <span id="history_batteryID"><%= item.api_code %></span></p>
+    <p><strong>Offer Interest:</strong> <span id="history_offer_interest"><%= item.current_owner %></span></p>
+    <p><strong>Reference Sector:</strong> <span id="history_reference_sector"><%= item.referenceSector %></span></p>
+    <p><strong>Reference Type:</strong> <span id="history_reference_type"><%= item.referenceType %></span></p>
+    <p><strong>Offer Price:</strong> <span id="history_offer_price"><%= item.price %></span></p>
+    <p><strong>Description:</strong> <span id="history_description"><%= item.description %></span></p>
+    <p><strong>Date of Creation:</strong> <span id="history_date_creation"><%= item.api_creation %></span></p>
+    <p><strong>Number of Refurbishment:</strong> <span id="history_refurbishmentAmount"><%= item.api_refurb %></span></p>
+    <p><strong>Date of Last Refurbishment:</strong> <span id="history_date_lastRefurbishment"><%= item.api_refurbDate %></span></p>
+    <p><strong>Description of Refurbishment:</strong> <span id="history_description_Refurbishment"><%= item.api_descriptionRefurb %></span></p>
+  </div>
+<% }); %>
+
+<button id="nextButton">Next</button>
+<button id="previousButton">Previous</button>
+
+
+
+<script src="<%= baseUrl %>/javascripts/historyButton.js"></script>

@@ -1,0 +1,35 @@
+<% layout('layouts/boilerplate') %>
+
+<h1>Item History</h1>
+
+<p>BatteryID: <span id="history_batteryID"><%= data.api_code %></span></p>
+
+<p><strong>Offer Interest:</strong> <span id="history_offer_interest"><%= data.current_owner %></span></p>
+
+<p><strong>Reference Sector:</strong> <span id="history_reference_sector"><%= data.referenceSector %></span></p>
+
+<p><strong>Reference Type:</strong> <span id="history_reference_type"><%= data.referenceType %></span></p>
+
+<p><strong>Offer Price:</strong> <span id="history_offer_price"><%= data.price %></span></p>
+
+<p><strong>Description:</strong> <span id="history_description"><%= data.description %></span></p>
+
+<p><strong>Date of Creation:</strong> <span id="history_date_creation"><%= data.api_creation %></span></p>
+
+<p><strong>Number of Refurbishment:</strong> <span id="history_refurbishmentAmount"><%= data.api_refurb %></span></p>
+
+<p><strong>Date of Last Refurbishment:</strong> <span id="history_date_lastRefurbishment"><%= data.api_refurbDate %></span></p>
+
+<p><strong>Description of Refurbishment:</strong> <span id="history_description_Refurbishment"><%= data.api_descriptionRefurb %></span></p>
+
+
+<th scope="col">
+    <a
+        class="btn btn-primary historyButton"
+        style="float: right"
+        id="getAllHistory"
+        role="button" 
+        href="<%= baseUrl %>/entireHistory/<%= data.id %>">
+        Get entire history
+    </a>
+</th>

@@ -37,7 +37,7 @@
 
     <div class="card mb-3">
       <div class="d-flex flex-row">
-        <h2 class="my-3 mx-4"><%= offer.title %></h2>
+        <h2 style="color: black;" class="my-3 mx-4"><%= offer.title %></h2>
         <span class="badge bg-success my-4"> <%= offer.costumer %> </span>
       </div>
 
@@ -49,9 +49,9 @@
         <li class="list-group-item text-muted"><%= offer.location %></li>
         <li class="list-group-item">
           Submitted by
-          <a href="<%= baseUrl %>/profile/<%= offer.author.username %>"
-            ><%= offer.author.username %></a
-          >
+          <a href="<%= baseUrl %>/profile/<%= offer.author.username %>">
+            <%= offer.author.username %>
+          </a>
         </li>
       </ul>
 
@@ -87,7 +87,23 @@
       class="btn btn-primary"
       href="<%= baseUrl %>/negotiations/create/<%= offer._id %>"
       role="button"
-      >Direct Negotiation</a
+      >Direct Negotiation</a>
+        <th scope="col">
+          <a
+            class="btn btn-primary historyButton"
+            style="float: right"
+            id="historyButton"
+            role="button"
+            href="<%= baseUrl %>/history/<%= offer._id %>"
+            >Get History</a>
+        </th>
+    <a
+    class="btn btn-primary purchaseButton"
+    id="purchaseButton"
+    name="<%= offer.api_code %>"
+    style="float: right; margin-right: 100px;"
+    role="button"
+    >Purchase batteryID <%= offer.api_code %></a
     >
   </div>
   <div class="col-6">
@@ -95,7 +111,7 @@
     <div class="card">
       <% if (currentUser) { %>
       <div class="card-body">
-        <h2 class="card-title">Leave a Review</h2>
+        <h2 style="color: black" class="card-title">Leave a Review</h2>
         <!-- <a href="<%= baseUrl %>/offers">All offers</a> -->
         <form
           action="<%= baseUrl %>/offers/<%=offer._id%>/reviews"
@@ -157,7 +173,7 @@
           </div>
 
           <div class="mb-3">
-            <label class="form-label" for="body">Review Text</label>
+            <label style="color: black" class="form-label" for="body">Review Text</label>
             <textarea
               class="form-control"
               name="review[body]"
@@ -179,12 +195,12 @@
     <% for (let review of offer.reviews) { %>
     <div class="card mb-3">
       <div class="card-body">
-        <h5 class="card-title"><%= review.author.username %></h5>
+        <h5 style="color: black" class="card-title"><%= review.author.username %></h5>
         <p class="starability-result" data-rating="<%= review.rating %>">
           Rated: <%= review.rating %> stars
         </p>
         <!-- <h6 class="card-subtitle mb-2 text-muted">By <%= review.author.username %></h6> -->
-        <p class="card-text">Review: <%= review.body %></p>
+        <p style="color: black" class="card-text">Review: <%= review.body %></p>
         <% if (currentUser && review.author.equals(currentUser._id)) { %>
         <form
           action="<%= baseUrl %>/offers/<%= offer._id %>/reviews/<%= review._id %>?_method=DELETE"
@@ -205,3 +221,5 @@
   const offer = <%- JSON.stringify(offer) %>;
 </script>
 <script src="<%= baseUrl %>/javascripts/showPageMap.js"></script>
+<script src="<%= baseUrl %>/javascripts/ownerChange.js"></script>
+

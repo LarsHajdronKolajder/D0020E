@@ -81,7 +81,7 @@ customActionButton.addEventListener('click', function() {
       .catch(error => {
         console.error('Error:', error);
       });
-    }
+    } 
   });
 
 function getCookie(name) {

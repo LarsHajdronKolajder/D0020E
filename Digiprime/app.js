@@ -29,6 +29,8 @@ const notificationRoutes = require("./routes/notification");
 const { notificationMiddleware } = require("./controllers/notification");
 const formatDistanceToNow = require("date-fns/formatDistanceToNow");
 const cookie = require('cookie');
+const historyOffer = require("./routes/history");
+const entireHistoryOffer = require("./routes/entireHistory");
 
 // const { csrfProtection } = require("./utils/csrf");
 
@@ -49,10 +51,15 @@ mongoose.connect(dbUrl, {
   useFindAndModify: false,
 });
 
+console.log("Connecting to MongoDB:", dbUrl);
+
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
 db.once("open", () => {
-  console.log("Database connected");
+  console.log("Database connected:");
+  console.log(`  - Host: ${db.host}`);
+  console.log(`  - Port: ${db.port}`);
+  console.log(`  - Name: ${db.name}`);
 });
 
 app.engine("ejs", ejsMate);
@@ -116,7 +123,14 @@ const connectSrcUrls = [
   "https://b.tiles.mapbox.com/",
   "https://events.mapbox.com/",
   "https://automotive.digiprime-mvp.red.extrasys.it/orc/data/edm",
-  "https://automotive.digiprime-mvp.red.extrasys.it"
+  "https://automotive.digiprime-mvp.red.extrasys.it",
+  "http://localhost:105/",    //docker API URL
+  "http://localhost:105",    //docker API URL
+  "http://localhost:107",
+  "http://localhost:107/",
+  "http://localhost:107/user/login",
+  "http://172.19.0.2:3009/", //ipfs api
+  "http://172.19.0.3:3009/"
 ];
 
 let imgSrcUrls = [
@@ -233,6 +247,8 @@ app.use(notificationMiddleware);
 //   next();
 // });
 
+app.use(`${BASE_URL}/entireHistory`, entireHistoryOffer);
+app.use(`${BASE_URL}/history`, historyOffer);
 app.use(`${BASE_URL}/auth`, userRoutes);
 app.use(`${BASE_URL}/offers`, offerRoutes);
 app.use(`${BASE_URL}/offers/:id/reviews`, reviewRoutes);
@@ -242,6 +258,7 @@ app.use(`${BASE_URL}/negotiations`, negotiationRoutes);
 app.use(`${BASE_URL}/messages`, messageRoutes);
 app.use(`${BASE_URL}/broker`, brokerRoutes);
 app.use(`${BASE_URL}/notifications`, notificationRoutes);
+
 
 app.get(`${BASE_URL}/`, (req, res) => {
   res.render("home");

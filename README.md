@@ -91,7 +91,6 @@ To persist MongoDB mount `/data/db` which is where Mongo stores the data.
 Our RBAC system is built on top of an existing RBAC system, which couldn't be modified. This led to the development of our system, featuring a simplified visual frontend. While the frontend was simple, the backend was especially developt to seamlessly integrate with the pre-existing RBAC system, ensuring that the vital controls and checks will work.
 
 
-
 ### MongoDB
 
 User login credentials will be securely stored in MongoDB. Initially, certain information will only be modifiable through direct database access, such as role and seller.
@@ -131,7 +130,53 @@ To enable users to create an offer, they must log into an account with the neces
 
 
 
+# Overall installation
+## 1. Installation Dependencies
 
+### 1. Docker needs to be installed, either [Docker Desktop](https://www.docker.com/products/docker-desktop/) or [Docker Engine](https://docs.docker.com/engine/install/)
+### 2. You will also need npm for this project to work [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
+### 3. The project used MongoDB (especially Atlas) to manage the data in the cloud, you can download and get started with atlas [here](https://www.mongodb.com/docs/atlas/getting-started/) to get your connection string ready for usage (Used within ./Ledger/app.py aswell as ./Decentralized/app.py)
+
+## 2. Docker setup (Different networks)
+### 1. Create a new docker network with command `docket network create my-network`, this `my-network` will be the network that you will join together the Digiprime container, Kubo container and Rest API.
+### 2. When setting up either the Digiprime container, Kubo container or Rest API you will need to include within the run command `--network my_network` to have them accessable within all three docker containers
+
+## 3. Docker setup (Kubo)
+### 1. Make sure **Docker** is installed & running `docker --version` in CLI
+### 2. Inside `../Decentralized/IPFS` its two folders `ipfs_staging` and `ipfs_data` that are created, if not create them.
+### 3. Pull the image, run in terminal `docker pull ipfs/kubo`
+### 4. Run the docker-container with `docker run -d --name ipfs_host --network my_network \
+###  -v ~/dev/github/D0020E/Decentralized/IPFS/ipfs_staging:/export \
+###  -v ~/dev/github/D0020E/Decentralized/IPFS/ipfs_data:/data/ipfs \
+###  -p 4001:4001 -p 4001:4001/udp -p 127.0.0.1:8080:8080 -p 127.0.0.1:5001:5001 \
+###  ipfs/kubo:latest` and replace the paths with your actual paths to the `ipfs_staging` and `ipfs_data` 
+### 5. Check the container logs, either with `docker logs -f ipfs_host` or inside Docker Desktop, should look like the image ![Alt text](./img/logs.png)
+### 6. Access the WebUI at http://0.0.0.0:5001/webui or http://127.0.0.1:5001/webui and confirm that its connected to IPFS ![Alt text](./img/webui-ok.png)
+### 7. If you are having connection issues, make sure that the your firewall have opened/allowed ports 5001 (RPC API) and 8080 (IPFS Gateway) or the specific ports your entered in the docker run command
+### 8. You could also need to open port 4001 inside your router (Both ways, i.e UDP/TCP)
+### 9. Check peer connections with either visiting http://localhost:3000/getPeers if the Express API is running otherwise navigate to peers inside the webui ![Alt text](./img/peers.png)
+
+### More info can be found at either https://docs.ipfs.tech/install/run-ipfs-inside-docker/#set-up or https://docs.ipfs.tech/how-to/troubleshooting/
+
+
+## 4. Running the Express API
+### 1. Just run `npm install` to get everthing and start with `npm start` to make nodemon running.
+### 2. Check connectivity with Postman/curl/thunderclient to API by calling `http://ip_addr:port/getPeers` (this will also check Kubos connectivity to other peers within the IPFS network)
+
+
+## 5. Env files to run the project
+### 1. Your own MongoDB atlas connection string you can locate here through MongoDBs own [guide](https://www.mongodb.com/docs/guides/atlas/connection-string/)
+### 2. Digiprime needs other env to be run, you can contact [who?](who@.se) to give you the credentials
+
+
+## 6. Example docker run commands
+### 1. `docker run -p 3009:3009 -d --name ipfs_api --network testing ipfs_api` for Express Rest API
+### 2. `docker run -d --name ipfs_host --network testing  -v ~/dev/github/D0020E/Decentralized/IPFS/ipfs_staging:/export -v ~/dev/github/D0020E/Decentralized/IPFS/ipfs_data:/data/ipfs -p 4001:4001 -p 4001:4001/udp -p 127.0.0.1:8080:8080 -p 127.0.0.1:5001:5001 ipfs/kubo:latest` for Kubo RPC image
+
+
+## 7. Other setup changes you need to address
+### 1. Docker IP changes, since you will be allocated an IP addr when starting your container, it could be different than correctly configurated **./Digiprime/app.js** under "connectSrcUrls", you will need to get these docker ip addresses to be set appropratley otherwise it won't connect due to Helmet CSP.
+### 2. Command for finding your docker ip is either `docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' <container_name_or_id>` or you can see whats connected to the network by running `docker network inspect my_network` to see information regarding the containers currently connected to your docker network.
   
 
 

@@ -57,7 +57,11 @@ const HistorySchema = new Schema(
                 ref: "Review",
             },
         ],
-        deleted: Boolean,
+        api_creation: Date,
+        api_refurb: Number,
+        api_dateRefurb: Date,
+        api_descriptionRefurb: String,
+
     },
     opts
 );

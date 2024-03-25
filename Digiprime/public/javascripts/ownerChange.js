@@ -1,5 +1,4 @@
 const buyButton = document.getElementById("purchaseButton");
-
 const apiUrl = "http://localhost:105"; // fetch ledger info
 const ledger_user_url = "http://localhost:107"; // check user info
 

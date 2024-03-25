@@ -68,6 +68,21 @@ def update_cid():
         return jsonify({"status": "error", "message": str(e)})
 
 
+@app.route("/getCIDfromID", methods=['POST'])
+def get_cid_from_id():
+    id = request.json['digiprimeID']
+    signature = col.find_one({
+        "digiprimeID": id
+    })
+
+    if signature:
+        return jsonify({
+            "CID": signature.get("CID", "")
+        })
+    else:
+        return None
+
+
 @app.route("/getCID", methods=['POST'])
 def get_cid():
     BatteryID = request.json['BatteryID']

@@ -87,17 +87,16 @@
       class="btn btn-primary"
       href="<%= baseUrl %>/negotiations/create/<%= offer._id %>"
       role="button"
-      >Direct Negotiation</a
-    >
-    <th scope="col">
-      <a
-        class="btn btn-primary historyButton"
-        style="float: right"
-        id="historyButton"
-        role="button"
-        >Get History</a
-      >
-    </th>
+      >Direct Negotiation</a>
+        <th scope="col">
+          <a
+            class="btn btn-primary historyButton"
+            style="float: right"
+            id="historyButton"
+            role="button"
+            href="<%= baseUrl %>/history/<%= offer._id %>"
+            >Get History</a>
+        </th>
     <a
     class="btn btn-primary purchaseButton"
     id="purchaseButton"

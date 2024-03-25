@@ -180,7 +180,7 @@ module.exports.create = async (req, res) => {
       id: newOffer._id,
     };
 
-    IPFS.uploadToIPFS(copyNewOffer);
+    IPFS.EncryptAndUploadToIPFS(copyNewOffer);
 
     req.flash("success", "Successfully made a new offer!");
     res.redirect(`${req.app.locals.baseUrl}/offers/${newOffer._id}`);
@@ -188,7 +188,6 @@ module.exports.create = async (req, res) => {
     console.error('Error:', error);
     // Handle error response
     req.flash("error", "Failed to create a new offer");
-    res.redirect(`${req.app.locals.baseUrl}/offers/${newOffer._id}`);
     //res.send(newOffer);
   }
 };

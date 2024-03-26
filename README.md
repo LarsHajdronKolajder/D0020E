@@ -213,6 +213,7 @@ More info can be found at either https://docs.ipfs.tech/install/run-ipfs-inside-
 1. Docker IP changes, since you will be allocated an IP addr when starting your container, it could be different than correctly configurated **./Digiprime/app.js** under "connectSrcUrls", you will need to get these docker ip addresses to be set appropratley otherwise it won't connect due to Helmet CSP.
 2. Command for finding your docker ip is either `docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' <container_name_or_id>` or you can see whats connected to the network by running `docker network inspect my_network` to see information regarding the containers currently connected to your docker network.
 3. When you have your Docker IP, I have now added a file called "config.js" in the root directory inside `Digiprime/config.js` here you can change the `IPFS_URL` to match the IP you get and it gets updated everywhere.
+4. Running `docker logs -f ipfs_api` or what you called your ipfs_api (Rest API that communicated with IPFS Kubo) to get the link to the http for the specific CID you just uploaded.
 ## DISCLAIMER 
 Inside `Digiprime/public/javascript/apiButton.js` and `Digiprime/public/javascript/ownerChange.js` you need to **MANUALLY** change the const for the URLs if they are changed otherwise webpack needs to be installed & configurated (since its client-side code).
 

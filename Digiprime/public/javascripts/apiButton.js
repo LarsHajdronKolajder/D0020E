@@ -2,8 +2,12 @@ const apiButton = document.querySelector('.apiButton');
 const apiCodeInput = document.getElementById('api_code');
 const offerButton = document.getElementById('offerButton');
 
+// To import config.js here we need webpack, did not really have time to setup this
+// sorry eric ):
+
 const apiUrl = "http://localhost:105";
 const ledger_user_url = "http://localhost:107";
+
 offerButton.disabled = true;
 
 apiButton.addEventListener('click', function() {

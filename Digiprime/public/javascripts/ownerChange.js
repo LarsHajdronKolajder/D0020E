@@ -1,7 +1,10 @@
 const buyButton = document.getElementById("purchaseButton");
+
+// To import config.js here we need webpack, did not really have time to setup this
+// sorry eric ):
+
 const apiUrl = "http://localhost:105"; // fetch ledger info
 const ledger_user_url = "http://localhost:107"; // check user info
-
 buyButton.addEventListener("click", function () {
 
   // Get the battery ID

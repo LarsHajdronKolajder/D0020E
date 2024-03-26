@@ -37,6 +37,8 @@ const entireHistoryOffer = require("./routes/entireHistory");
 const Message = require("./models/messages");
 const userController = require("./controllers/users");
 
+const config = require("./config");
+
 const BASE_URL = process.env.BASE_URL || "";
 const port = process.env.PORT || 3000;
 const dbUrl = process.env.DB_URL || "mongodb://localhost:27017/offer-test";
@@ -124,13 +126,17 @@ const connectSrcUrls = [
   "https://events.mapbox.com/",
   "https://automotive.digiprime-mvp.red.extrasys.it/orc/data/edm",
   "https://automotive.digiprime-mvp.red.extrasys.it",
+  /*
   "http://localhost:105/",    //docker API URL
   "http://localhost:105",    //docker API URL
   "http://localhost:107",
   "http://localhost:107/",
   "http://localhost:107/user/login",
   "http://172.19.0.2:3009/", //ipfs api
-  "http://172.19.0.3:3009/"
+  "http://172.19.0.3:3009/" */
+  config.IPFS_URL + "/", // IPFS API
+  config.LEDGER_USER_URL + "/", // Ledger (port 107)
+  config.MONGO_DB_PY_API + "/" // MongoDB (port 105)
 ];
 
 let imgSrcUrls = [

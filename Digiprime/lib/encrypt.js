@@ -1,5 +1,6 @@
 const crypto = require('crypto');
 
+//needs to be 32 bytes
 const secret = process.env.ENCRYPTION_KEY || "ThisIsMySecretKey123456789101112";
 
 module.exports.encrypt = async (plainJson) => {

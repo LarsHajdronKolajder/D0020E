@@ -13,7 +13,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 const port = 3009;
 
+/*
 
+Not used anymore, but saving if needing later
 // API for MongoDB
 const client = new MongoClient(process.env.MONGODB_URI, {
     serverApi: {
@@ -28,40 +30,10 @@ const client = new MongoClient(process.env.MONGODB_URI, {
 //                           <"          ">            <"  ">                        
 const collection = client.db("CIDDataBase").collection("cid");
 
+*/
 
-
-app.get('/get/cid', async (req, res) => {
-    try {
-        await client.connect();
-        const result = await collection.find({}).toArray();
-
-        res.status(200).json(result);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Internal Server Error' });
-    } finally {
-        await client.close();
-    }
-});
-
-app.post('/post/cid', async (req, res) => {
-    try {
-        await client.connect();
-
-        const cid = req.body.cid;
-        await collection.insertOne({ cid: cid });
-
-        res.status(201).json({ message: 'CID added successfully' });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Internal Server Error' });
-    } finally {
-        await client.close();
-    }
-});
-
-
-
+// Naming convention for "http://ipfs_host" this ipfs_host is the Docker service name that you
+// specify when running the container, with --name ipfs_host for example
 app.get('/getPeers', async (req, res) => {
     try {
         const response = await axios.post('http://ipfs_host:5001/api/v0/swarm/peers/ls');
@@ -117,7 +89,7 @@ const addAndPin = async (fileContent) => {
     }
 };
 
-app.post('/add3', async (req, res) => {
+app.post('/add', async (req, res) => {
     try {
       const formData = req.body;
 
@@ -133,7 +105,7 @@ app.post('/add3', async (req, res) => {
 });
 
 
-app.post('/get-content', async (req, res) => {
+app.post('/getContent', async (req, res) => {
     try {
         const cid = req.body.cid;
         const response = await axios.post(`http://ipfs_host:5001/api/v0/cat?arg=${cid}`);
